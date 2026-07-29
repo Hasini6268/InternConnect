@@ -31,6 +31,7 @@ document.getElementById(
 
 
 
+
 // Get Internship ID
 
 const params =
@@ -54,7 +55,6 @@ params.get("id");
 async function loadApplicants(){
 
 
-
     if(!internshipId){
 
 
@@ -62,7 +62,6 @@ async function loadApplicants(){
         "<h3>Invalid Internship ID</h3>";
 
         return;
-
 
     }
 
@@ -82,10 +81,8 @@ async function loadApplicants(){
 
                 headers:{
 
-
                     Authorization:
                     `Bearer ${token}`
-
 
                 }
 
@@ -102,11 +99,11 @@ async function loadApplicants(){
 
 
 
+
         console.log(
             "Applicants:",
             data
         );
-
 
 
 
@@ -120,12 +117,19 @@ async function loadApplicants(){
         if(!response.ok){
 
 
-            applicantsContainer.innerHTML =
-            `<h3>${data.message || "Unable to load applicants"}</h3>`;
+            applicantsContainer.innerHTML = `
+
+            <h3>
+            ${
+                data.message ||
+                "Unable to load applicants"
+            }
+            </h3>
+
+            `;
 
 
             return;
-
 
         }
 
@@ -136,8 +140,10 @@ async function loadApplicants(){
 
 
         if(
+
             !data.applications ||
             data.applications.length === 0
+
         ){
 
 
@@ -147,7 +153,6 @@ async function loadApplicants(){
 
             return;
 
-
         }
 
 
@@ -156,110 +161,281 @@ async function loadApplicants(){
 
 
 
+
         data.applications.forEach(
-        application => {
+
+            application => {
 
 
 
-            const student =
-            application.student;
-
-
-
-            const card =
-            document.createElement(
-                "div"
-            );
-
-
-
-            card.className =
-            "internship-card";
+                const student =
+                application.student || {};
 
 
 
 
-
-            card.innerHTML = `
-
-
-            <h2>
-            ${student.fullName}
-            </h2>
+                const card =
+                document.createElement(
+                    "div"
+                );
 
 
 
-            <p>
-            <strong>Email:</strong>
-            ${student.email}
-            </p>
-
-
-
-            <p>
-            <strong>Status:</strong>
-            ${application.status}
-            </p>
-
-
-
-            <select id="status-${application._id}">
-
-
-                <option value="Pending">
-                Pending
-                </option>
-
-
-                <option value="Shortlisted">
-                Shortlisted
-                </option>
-
-
-                <option value="Rejected">
-                Rejected
-                </option>
-
-
-
-            </select>
-
-
-
-            <br><br>
-
-
-
-
-            <button onclick="updateStatus('${application._id}')">
-
-            Update Status
-
-            </button>
-
-
-
-            `;
+                card.className =
+                "internship-card";
 
 
 
 
 
-            applicantsContainer.appendChild(card);
+                card.innerHTML = `
+
+
+
+                <h2>
+
+                ${student.fullName || "Student"}
+
+                </h2>
 
 
 
 
 
-            document.getElementById(
-                `status-${application._id}`
-            ).value =
-            application.status;
+                <p>
+
+                <strong>
+                Email:
+                </strong>
+
+                ${
+                    student.email ||
+                    "Not Available"
+                }
+
+                </p>
 
 
 
 
-        });
+
+
+                <p>
+
+                <strong>
+                Phone:
+                </strong>
+
+                ${
+                    application.phone ||
+                    student.phone ||
+                    "Not Available"
+                }
+
+                </p>
+
+
+
+
+
+
+                <p>
+
+                <strong>
+                College:
+                </strong>
+
+                ${
+                    application.college ||
+                    student.college ||
+                    "Not Available"
+                }
+
+                </p>
+
+
+
+
+
+
+                <p>
+
+                <strong>
+                Skills:
+                </strong>
+
+                ${
+                    application.skills ||
+                    "Not Available"
+                }
+
+                </p>
+
+
+
+
+
+
+
+                <p>
+
+                <strong>
+                Cover Letter:
+                </strong>
+
+                <br>
+
+                ${
+                    application.coverLetter ||
+                    "Not Provided"
+                }
+
+                </p>
+
+
+
+
+
+
+
+                <p>
+
+                <strong>
+                Resume:
+                </strong>
+
+
+                ${
+                    application.resume
+
+                    ?
+
+                    `<a href="https://internconnect-ngxa.onrender.com/${application.resume}"
+                    target="_blank">
+
+                    View Resume
+
+                    </a>`
+
+                    :
+
+                    "Not Uploaded"
+
+                }
+
+
+                </p>
+
+
+
+
+
+
+
+
+                <p>
+
+                <strong>
+                Current Status:
+                </strong>
+
+                ${
+                    application.status
+                }
+
+
+                </p>
+
+
+
+
+
+
+
+                <select id="status-${application._id}">
+
+
+                    <option value="Pending">
+                    Pending
+                    </option>
+
+
+                    <option value="Reviewed">
+                    Reviewed
+                    </option>
+
+
+                    <option value="Shortlisted">
+                    Shortlisted
+                    </option>
+
+
+                    <option value="Interview Scheduled">
+                    Interview Scheduled
+                    </option>
+
+
+                    <option value="Selected">
+                    Selected
+                    </option>
+
+
+                    <option value="Rejected">
+                    Rejected
+                    </option>
+
+
+                </select>
+
+
+
+
+
+                <br><br>
+
+
+
+
+
+
+                <button
+
+                onclick="updateStatus('${application._id}')"
+
+                >
+
+                Update Status
+
+                </button>
+
+
+
+
+                `;
+
+
+
+
+
+                applicantsContainer.appendChild(card);
+
+
+
+
+
+
+                document.getElementById(
+                    `status-${application._id}`
+                ).value = application.status;
+
+
+
+
+
+            }
+
+        );
+
 
 
 
@@ -275,13 +451,17 @@ async function loadApplicants(){
         );
 
 
-        applicantsContainer.innerHTML =
-        "<h3>Server connection error</h3>";
 
+        applicantsContainer.innerHTML = `
+
+        <h3>
+        Server connection error
+        </h3>
+
+        `;
 
 
     }
-
 
 
 }
@@ -302,112 +482,126 @@ async function updateStatus(applicationId){
 
 
 
-const status =
-document.getElementById(
-    `status-${applicationId}`
-).value;
+    const status =
+    document.getElementById(
+        `status-${applicationId}`
+    ).value;
 
 
 
 
 
-try{
+    try{
 
 
-const response =
-await fetch(
-
-`${API_URL}/applications/status/${applicationId}`,
-
-{
+        const response =
+        await fetch(
 
 
-method:"PUT",
+            `${API_URL}/applications/status/${applicationId}`,
 
 
-headers:{
+            {
 
 
-"Content-Type":
-"application/json",
+                method:"PUT",
 
 
-Authorization:
-`Bearer ${token}`
+                headers:{
 
 
-},
+                    "Content-Type":
+                    "application/json",
 
 
-body:
-JSON.stringify({
-    status
-})
+                    Authorization:
+                    `Bearer ${token}`
+
+
+                },
+
+
+                body:
+                JSON.stringify({
+
+                    status
+
+                })
+
+
+            }
+
+
+        );
+
+
+
+
+
+
+        const data =
+        await response.json();
+
+
+
+
+
+        console.log(
+
+            "Status Update:",
+            data
+
+        );
+
+
+
+
+
+        alert(
+
+            data.message ||
+            "Status updated"
+
+        );
+
+
+
+
+
+        if(response.ok){
+
+
+            loadApplicants();
+
+
+        }
+
+
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "Server Error"
+        );
+
+
+    }
+
 
 
 }
 
-);
-
-
-
-
-
-
-const data =
-await response.json();
-
-
-
-console.log(
-"Status Update:",
-data
-);
-
-
-
-
-alert(
-data.message ||
-"Status updated"
-);
-
-
-
-
-
-if(response.ok){
-
-
-loadApplicants();
-
-
-}
-
-
-
-
-}
-
-
-catch(error){
-
-
-console.error(
-error
-);
-
-
-alert(
-"Server Error"
-);
-
-
-}
-
-
-
-}
 
 
 
