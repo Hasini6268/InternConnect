@@ -1,14 +1,22 @@
 console.log("Login JS Loaded");
 
 
+// Render Backend URL
 const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 
-const loginForm = document.getElementById("loginForm");
+
+const loginForm =
+document.getElementById("loginForm");
 
 
 
-loginForm.addEventListener("submit", async (e) => {
+
+
+loginForm.addEventListener(
+"submit",
+
+async(e)=>{
 
 
     e.preventDefault();
@@ -16,48 +24,67 @@ loginForm.addEventListener("submit", async (e) => {
 
 
     const email =
-        document.getElementById("email").value.trim();
+    document.getElementById("email")
+    .value
+    .trim();
 
 
 
     const password =
-        document.getElementById("password").value.trim();
+    document.getElementById("password")
+    .value
+    .trim();
 
 
 
 
 
-    try {
+    try{
 
 
+        const response =
+        await fetch(
 
-        const response = await fetch(
             `${API_URL}/auth/login`,
+
             {
 
-                method: "POST",
 
-                headers: {
+                method:"POST",
 
-                    "Content-Type": "application/json"
+
+                headers:{
+
+
+                    "Content-Type":
+                    "application/json"
+
 
                 },
 
 
-                body: JSON.stringify({
+                body:
+                JSON.stringify({
 
                     email,
                     password
 
                 })
 
+
             }
+
         );
 
 
 
 
-        const data = await response.json();
+
+
+
+        const data =
+        await response.json();
+
 
 
 
@@ -70,16 +97,16 @@ loginForm.addEventListener("submit", async (e) => {
 
 
 
+
         if(response.ok){
 
 
-
-            // Save user details
 
             localStorage.setItem(
                 "token",
                 data.token
             );
+
 
 
             localStorage.setItem(
@@ -90,14 +117,10 @@ loginForm.addEventListener("submit", async (e) => {
 
 
 
-            alert(
-                "Login successful 🎉"
-            );
 
 
+            // Role based redirect
 
-
-            // Role based navigation
 
             if(data.user.role === "admin"){
 
@@ -107,7 +130,11 @@ loginForm.addEventListener("submit", async (e) => {
 
 
             }
-            else if(data.user.role === "company"){
+
+
+            else if(
+                data.user.role === "company"
+            ){
 
 
                 window.location.href =
@@ -115,6 +142,8 @@ loginForm.addEventListener("submit", async (e) => {
 
 
             }
+
+
             else{
 
 
@@ -127,12 +156,15 @@ loginForm.addEventListener("submit", async (e) => {
 
 
         }
+
+
+
         else{
 
 
             alert(
                 data.message ||
-                "Invalid login details"
+                "Login failed"
             );
 
 
@@ -142,6 +174,8 @@ loginForm.addEventListener("submit", async (e) => {
 
 
     }
+
+
     catch(error){
 
 
@@ -154,11 +188,13 @@ loginForm.addEventListener("submit", async (e) => {
 
 
         alert(
-            "Server connection failed"
+            "Unable to connect with server"
         );
 
 
+
     }
+
 
 
 });
