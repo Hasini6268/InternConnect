@@ -1,141 +1,197 @@
-// InternConnect - internships.js
-
-const API_URL = "http://localhost:5000/api";
-
-const internshipContainer = document.getElementById("internshipContainer");
-
-const applicationModal = document.getElementById("applicationModal");
-const applicationForm = document.getElementById("applicationForm");
+console.log("Internships JS Loaded");
 
 
-
-async function loadInternships() {
-
-    try {
-
-        const response = await fetch(`${API_URL}/internships`);
-
-        const data = await response.json();
+// Render Backend URL
+const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 
-        if (!response.ok) {
+const token = localStorage.getItem("token");
 
-            alert(data.message || "Failed to load internships");
+
+
+const container =
+document.getElementById(
+    "internshipContainer"
+);
+
+
+
+
+
+// ==========================
+// Load All Internships
+// ==========================
+
+async function loadInternships(){
+
+
+    try{
+
+
+        const response =
+        await fetch(
+
+            `${API_URL}/internships`
+
+        );
+
+
+
+        const data =
+        await response.json();
+
+
+
+        console.log(
+            "Internships Response:",
+            data
+        );
+
+
+
+        container.innerHTML = "";
+
+
+
+
+
+        if(!response.ok){
+
+
+            container.innerHTML =
+            `<h3>${data.message || "Unable to load internships"}</h3>`;
+
+
             return;
+
 
         }
 
 
-        internshipContainer.innerHTML = "";
 
 
-        data.internships.forEach((internship) => {
+
+        const internships =
+        data.internships ||
+        data ||
+        [];
 
 
-            const card = document.createElement("div");
 
-            card.classList.add("internship-card");
+
+
+        if(internships.length === 0){
+
+
+            container.innerHTML =
+            "<h3>No internships available</h3>";
+
+
+            return;
+
+
+        }
+
+
+
+
+
+        internships.forEach(
+        internship => {
+
+
+
+            const card =
+            document.createElement(
+                "div"
+            );
+
+
+
+            card.className =
+            "internship-card";
+
+
+
 
 
             card.innerHTML = `
 
-                <h2>${internship.title}</h2>
+
+            <h2>
+            ${internship.title}
+            </h2>
 
 
-                <p>
-                    <strong>Company:</strong>
-                    ${internship.companyName || "Not specified"}
-                </p>
+
+            <p>
+            ${internship.description}
+            </p>
 
 
-                <p>
-                    <strong>Description:</strong>
-                    ${internship.description}
-                </p>
+
+            <p>
+            <strong>Company:</strong>
+            ${internship.companyName || "Company"}
+            </p>
 
 
-                <p>
-                    <strong>Skills:</strong>
-                    ${internship.skills.join(", ")}
-                </p>
+
+            <p>
+            <strong>Location:</strong>
+            ${internship.location || "Not specified"}
+            </p>
 
 
-                <p>
-                    <strong>Location:</strong>
-                    ${internship.location}
-                </p>
+
+            <p>
+            <strong>Duration:</strong>
+            ${internship.duration || "Not specified"}
+            </p>
 
 
-                <p>
-                    <strong>Duration:</strong>
-                    ${internship.duration}
-                </p>
 
 
-                <p>
-                    <strong>Stipend:</strong>
-                    ${internship.stipend}
-                </p>
+            <button onclick="applyInternship('${internship._id}')">
 
+            Apply Now
 
-                <p>
-                    <strong>Mode:</strong>
-                    ${internship.mode}
-                </p>
+            </button>
 
-
-                <p>
-                    <strong>Last Date:</strong>
-                    ${new Date(internship.lastDate).toDateString()}
-                </p>
-
-
-                <button onclick="openApplicationForm('${internship._id}')">
-                    Apply Now
-                </button>
 
             `;
 
 
-            internshipContainer.appendChild(card);
+
+            container.appendChild(card);
+
 
 
         });
 
 
-    } catch(error) {
-
-        console.error(error);
-
-        alert("Cannot connect to server");
 
     }
 
-}
+
+    catch(error){
+
+
+        console.error(
+            "Internship Loading Error:",
+            error
+        );
 
 
 
-
-// Open Application Form
-
-function openApplicationForm(id) {
-
-    applicationModal.style.display = "block";
-
-    document.getElementById("internshipId").value = id;
-
-}
+        container.innerHTML =
+        "<h3>Server connection error</h3>";
 
 
 
+    }
 
-// Close Application Form
 
-function closeApplicationForm() {
-
-    applicationModal.style.display = "none";
-
-    applicationForm.reset();
 
 }
 
@@ -143,124 +199,116 @@ function closeApplicationForm() {
 
 
 
-// Submit Application
-
-applicationForm.addEventListener("submit", async (e)=>{
 
 
-    e.preventDefault();
 
 
-    const token = localStorage.getItem("token");
+// ==========================
+// Apply Internship
+// ==========================
+
+async function applyInternship(id){
+
 
 
     if(!token){
 
-        alert("Please login first");
 
-        window.location.href="login.html";
+        alert(
+            "Please login first"
+        );
+
+
+        window.location.href =
+        "login.html";
+
 
         return;
+
 
     }
 
 
-
-    const formData = new FormData();
-
-
-    formData.append(
-        "internshipId",
-        document.getElementById("internshipId").value
-    );
-
-
-    formData.append(
-        "phone",
-        document.getElementById("phone").value
-    );
-
-
-    formData.append(
-        "college",
-        document.getElementById("college").value
-    );
-
-
-    formData.append(
-        "skills",
-        document.getElementById("skills").value
-    );
-
-
-    formData.append(
-        "coverLetter",
-        document.getElementById("coverLetter").value
-    );
-
-
-    formData.append(
-        "resume",
-        document.getElementById("resume").files[0]
-    );
 
 
 
     try{
 
 
-        const response = await fetch(
-            `${API_URL}/applications/apply`,
+        const response =
+        await fetch(
+
+            `${API_URL}/applications/apply/${id}`,
+
             {
+
 
                 method:"POST",
 
+
                 headers:{
 
-                    "Authorization":`Bearer ${token}`
 
-                },
+                    Authorization:
+                    `Bearer ${token}`
 
-                body:formData
+
+                }
+
 
             }
+
         );
 
 
 
-        const data = await response.json();
 
 
 
-        if(!response.ok){
-
-            alert(data.message || "Application failed");
-
-            return;
-
-        }
+        const data =
+        await response.json();
 
 
 
-        alert("Application submitted successfully 🎉");
+        console.log(
+            "Apply Response:",
+            data
+        );
 
 
-        closeApplicationForm();
+
+
+        alert(
+            data.message ||
+            "Application submitted"
+        );
 
 
 
     }
+
+
     catch(error){
 
-        console.error(error);
 
-        alert("Server error");
+        console.error(
+            error
+        );
+
+
+        alert(
+            "Server error"
+        );
+
 
     }
 
 
 
-});
+}
+
+
+
 
 
 
