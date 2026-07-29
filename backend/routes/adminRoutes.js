@@ -9,8 +9,9 @@ const {
   deleteInternshipAdmin,
 } = require("../controllers/adminController");
 
-const protect = require("../middleware/authMiddleware");
-const authorizeRoles = require("../middleware/roleMiddleware");
+// Correct middleware imports
+const protect = require("../middleware/authmiddleware");
+const authorizeRoles = require("../middleware/rolemiddleware");
 
 const router = express.Router();
 
