@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -18,7 +18,6 @@ const registerUser = async (req, res) => {
       location,
     } = req.body;
 
-    // Validation
     if (!fullName || !email || !password || !role) {
       return res.status(400).json({
         success: false,
@@ -26,7 +25,6 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -36,10 +34,8 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Encrypt Password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create User
     const user = await User.create({
       fullName,
       email,
@@ -51,7 +47,6 @@ const registerUser = async (req, res) => {
       location,
     });
 
-    // Remove Password from Response
     const userData = {
       _id: user._id,
       fullName: user.fullName,
@@ -79,6 +74,7 @@ const registerUser = async (req, res) => {
   }
 };
 
+
 // ======================
 // Login User
 // ======================
@@ -87,7 +83,6 @@ const loginUser = async (req, res) => {
 
     const { email, password } = req.body;
 
-    // Validation
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -95,7 +90,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Check User
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -105,7 +99,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Check Password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -115,7 +108,7 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Generate JWT
+
     const token = jwt.sign(
       {
         id: user._id,
@@ -127,7 +120,7 @@ const loginUser = async (req, res) => {
       }
     );
 
-    // Remove Password from Response
+
     const userData = {
       _id: user._id,
       fullName: user.fullName,
@@ -141,6 +134,7 @@ const loginUser = async (req, res) => {
       createdAt: user.createdAt,
     };
 
+
     res.status(200).json({
       success: true,
       message: "Login Successful",
@@ -148,13 +142,17 @@ const loginUser = async (req, res) => {
       user: userData,
     });
 
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
+
   }
 };
+
 
 module.exports = {
   registerUser,
