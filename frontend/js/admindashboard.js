@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://internconnect-ngxa.onrender.com/api";
+
 
 const token = localStorage.getItem("token");
 
@@ -19,7 +20,6 @@ function logout() {
 }
 
 
-
 // Common headers
 const headers = {
     "Content-Type": "application/json",
@@ -34,9 +34,7 @@ async function loadDashboard() {
     try {
 
 
-        // =========================
         // Dashboard Statistics
-        // =========================
 
         const dashboardRes = await fetch(
             `${API_URL}/admin/dashboard`,
@@ -90,21 +88,14 @@ async function loadDashboard() {
         }
         else {
 
-
             document.getElementById("stats").innerHTML =
             "Unable to load statistics";
-
 
         }
 
 
 
-
-
-        // =========================
         // Students
-        // =========================
-
 
         const studentsRes = await fetch(
             `${API_URL}/admin/students`,
@@ -159,10 +150,8 @@ async function loadDashboard() {
         }
         else {
 
-
             studentsHTML =
             "<p>No students found</p>";
-
 
         }
 
@@ -175,13 +164,7 @@ async function loadDashboard() {
 
 
 
-
-
-
-
-        // =========================
         // Companies
-        // =========================
 
 
         const companiesRes = await fetch(
@@ -263,13 +246,7 @@ async function loadDashboard() {
 
 
 
-
-
-
-        // =========================
         // Internships
-        // =========================
-
 
 
         const internshipRes = await fetch(
@@ -340,7 +317,6 @@ async function loadDashboard() {
 
             internshipsHTML =
             "<p>No internships found</p>";
-
 
         }
 
