@@ -7,8 +7,23 @@ const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 const token = localStorage.getItem("token");
 
+const user = JSON.parse(
+    localStorage.getItem("user")
+);
 
-// Check login
+
+
+const container =
+document.getElementById(
+    "applicationsContainer"
+);
+
+
+
+// ==========================
+// Check Login
+// ==========================
+
 if (!token) {
 
     alert("Please login first");
@@ -19,8 +34,22 @@ if (!token) {
 
 
 
-const container =
-document.getElementById("applicationsContainer");
+
+// ==========================
+// Logout
+// ==========================
+
+function logout(){
+
+    localStorage.removeItem("token");
+
+    localStorage.removeItem("user");
+
+    window.location.href =
+    "login.html";
+
+}
+
 
 
 
@@ -43,6 +72,8 @@ async function loadApplications(){
                 method:"GET",
 
                 headers:{
+
+                    "Content-Type":"application/json",
 
                     Authorization:
                     `Bearer ${token}`
@@ -71,98 +102,227 @@ async function loadApplications(){
 
 
 
+
+        // Token expired
+
+        if(
+            response.status === 401 ||
+            response.status === 403
+        ){
+
+            alert(
+                "Session expired. Please login again."
+            );
+
+            logout();
+
+            return;
+
+        }
+
+
+
+
+
         if(!response.ok){
 
 
-            container.innerHTML =
-            `<h3>${data.message || "Unable to load applications"}</h3>`;
+            container.innerHTML = `
 
-            return;
-
-        }
-
-
-
-
-        const applications =
-        data.applications || [];
-
-
-
-
-        if(applications.length === 0){
-
-
-            container.innerHTML =
-            "<h3>No applications submitted yet.</h3>";
-
-            return;
-
-
-        }
-
-
-
-
-        applications.forEach(application=>{
-
-
-            const internship =
-            application.internship;
-
-
-
-            const card =
-            document.createElement("div");
-
-
-
-            card.className =
-            "internship-card";
-
-
-
-            card.innerHTML = `
-
-
-                <h2>
-                    ${internship.title}
-                </h2>
-
-
-                <p>
-                    <strong>Company:</strong>
-                    ${internship.companyName || "N/A"}
-                </p>
-
-
-                <p>
-                    <strong>Location:</strong>
-                    ${internship.location || "N/A"}
-                </p>
-
-
-                <p>
-                    <strong>Status:</strong>
-                    ${application.status}
-                </p>
-
-
-                <p>
-                    <strong>Applied On:</strong>
-                    ${new Date(application.createdAt).toLocaleDateString()}
-                </p>
-
+            <h3>
+            ${data.message || "Unable to load applications"}
+            </h3>
 
             `;
 
 
+            return;
 
-            container.appendChild(card);
+        }
 
 
 
-        });
+
+
+
+
+        if(
+
+            !data.applications ||
+
+            data.applications.length === 0
+
+        ){
+
+
+            container.innerHTML = `
+
+            <h3>
+            No applications submitted yet.
+            </h3>
+
+            `;
+
+
+            return;
+
+
+        }
+
+
+
+
+
+
+
+        data.applications.forEach(
+
+            application => {
+
+
+
+                const internship =
+                application.internship;
+
+
+
+                const card =
+                document.createElement(
+                    "div"
+                );
+
+
+
+                card.className =
+                "internship-card";
+
+
+
+                card.innerHTML = `
+
+
+                <h2>
+
+                ${internship?.title || "Internship"}
+
+                </h2>
+
+
+
+                <p>
+
+                <strong>
+                Company:
+                </strong>
+
+                ${
+                    internship?.companyName ||
+                    "Not Available"
+                }
+
+                </p>
+
+
+
+                <p>
+
+                <strong>
+                Location:
+                </strong>
+
+                ${
+                    internship?.location ||
+                    "Not Available"
+                }
+
+                </p>
+
+
+
+
+                <p>
+
+                <strong>
+                Duration:
+                </strong>
+
+                ${
+                    internship?.duration ||
+                    "Not Available"
+                }
+
+                </p>
+
+
+
+
+
+                <p>
+
+                <strong>
+                Mode:
+                </strong>
+
+                ${
+                    internship?.mode ||
+                    "Not Available"
+                }
+
+                </p>
+
+
+
+
+
+                <p>
+
+                <strong>
+                Applied Date:
+                </strong>
+
+                ${
+                    new Date(
+                        application.createdAt
+                    ).toLocaleDateString()
+                }
+
+                </p>
+
+
+
+
+
+                <p>
+
+                <strong>
+                Status:
+                </strong>
+
+                <span>
+
+                ${
+                    application.status
+                }
+
+                </span>
+
+                </p>
+
+
+                `;
+
+
+
+                container.appendChild(
+                    card
+                );
+
+
+
+            }
+
+        );
+
 
 
 
@@ -173,23 +333,33 @@ async function loadApplications(){
 
 
         console.error(
-            "Applications Error:",
+            "My Applications Error:",
             error
         );
 
 
-        container.innerHTML =
-        "<h3>Server connection error</h3>";
+
+        container.innerHTML = `
+
+        <h3>
+        Server connection error
+        </h3>
+
+        `;
 
 
     }
-
 
 
 }
 
 
 
+
+
+
+// ==========================
 // Start
+// ==========================
 
 loadApplications();
