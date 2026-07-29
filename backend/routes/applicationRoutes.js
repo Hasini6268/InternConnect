@@ -7,19 +7,16 @@ const {
   updateApplicationStatus,
 } = require("../controllers/applicationController");
 
-
-const protect = require("../middleware/authMiddleware");
-const authorizeRoles = require("../middleware/roleMiddleware");
-const uploadResume = require("../middleware/uploadResume");
-
+// Correct middleware imports
+const protect = require("../middleware/authmiddleware");
+const authorizeRoles = require("../middleware/rolemiddleware");
+const uploadResume = require("../middleware/uploadresume");
 
 const router = express.Router();
-
 
 // ======================
 // Student Routes
 // ======================
-
 
 // Apply for Internship
 router.post(
@@ -30,7 +27,6 @@ router.post(
   applyInternship
 );
 
-
 // View Student Applications
 router.get(
   "/my-applications",
@@ -39,12 +35,9 @@ router.get(
   getMyApplications
 );
 
-
-
 // ======================
 // Company Routes
 // ======================
-
 
 // View Applicants
 router.get(
@@ -54,7 +47,6 @@ router.get(
   getApplicants
 );
 
-
 // Update Application Status
 router.put(
   "/status/:id",
@@ -62,7 +54,5 @@ router.put(
   authorizeRoles("company"),
   updateApplicationStatus
 );
-
-
 
 module.exports = router;
