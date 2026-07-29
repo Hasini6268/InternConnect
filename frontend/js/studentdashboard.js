@@ -1,15 +1,44 @@
 console.log("Student Dashboard JS Loaded");
 
 
+// ==========================
 // Render Backend URL
-const API_URL = "https://internconnect-ngxa.onrender.com/api";
+// ==========================
+
+const API_URL =
+"https://internconnect-ngxa.onrender.com/api";
 
 
-const token = localStorage.getItem("token");
 
-const user = JSON.parse(
-    localStorage.getItem("user")
-);
+// ==========================
+// User Data
+// ==========================
+
+const token =
+localStorage.getItem("token");
+
+
+let user = null;
+
+
+try {
+
+    user =
+    JSON.parse(
+        localStorage.getItem("user")
+    );
+
+}
+catch(error){
+
+    console.error(
+        "User Data Error:",
+        error
+    );
+
+}
+
+
 
 
 
@@ -17,11 +46,13 @@ const user = JSON.parse(
 // Check Login
 // ==========================
 
-if (!token) {
+if(!token){
 
-    window.location.href = "login.html";
+    window.location.href =
+    "login.html";
 
 }
+
 
 
 
@@ -30,22 +61,27 @@ if (!token) {
 // Display Student Name
 // ==========================
 
-if (user) {
+if(user){
 
 
-    const nameElement =
-    document.getElementById("studentName");
+    const name =
+    document.getElementById(
+        "studentName"
+    );
 
 
-    if(nameElement){
+    if(name){
 
-        nameElement.textContent =
-        user.fullName;
+        name.textContent =
+        user.fullName ||
+        "Student";
 
     }
 
 
 }
+
+
 
 
 
@@ -58,9 +94,14 @@ if (user) {
 function logout(){
 
 
-    localStorage.removeItem("token");
+    localStorage.removeItem(
+        "token"
+    );
 
-    localStorage.removeItem("user");
+
+    localStorage.removeItem(
+        "user"
+    );
 
 
     window.location.href =
@@ -73,232 +114,280 @@ function logout(){
 
 
 
+
+
+
 // ==========================
-// Load Dashboard Data
+// Load Dashboard
 // ==========================
 
 async function loadDashboard(){
 
 
 
-    try {
+try{
 
 
 
-        // ==========================
-        // Load Internships Count
-        // ==========================
+// --------------------------
+// Internship Count
+// --------------------------
 
 
-        const internshipResponse =
-        await fetch(
-            `${API_URL}/internships`
-        );
+const internshipResponse =
+await fetch(
 
+`${API_URL}/internships`
 
+);
 
-        const internshipData =
-        await internshipResponse.json();
 
 
+const internshipData =
+await internshipResponse.json();
 
-        console.log(
-            "Internships:",
-            internshipData
-        );
 
 
+console.log(
+"Internship Data:",
+internshipData
+);
 
 
-        if(internshipResponse.ok){
 
+const internshipCount =
+document.getElementById(
+"internshipCount"
+);
 
-            document.getElementById(
-                "internshipCount"
-            ).textContent =
 
-            internshipData.internships
-            ? internshipData.internships.length
-            : internshipData.count || 0;
 
+if(internshipCount){
 
 
-        }
+    internshipCount.textContent =
 
+    internshipData.totalInternships ||
 
+    internshipData.internships?.length ||
 
+    internshipData.count ||
 
-
-        // ==========================
-        // Load Applications
-        // ==========================
-
-
-        const applicationResponse =
-        await fetch(
-
-            `${API_URL}/applications/my-applications`,
-
-            {
-
-                method:"GET",
-
-                headers:{
-
-
-                    "Authorization":
-                    `Bearer ${token}`,
-
-
-                    "Content-Type":
-                    "application/json"
-
-
-                }
-
-            }
-
-        );
-
-
-
-        const applicationData =
-        await applicationResponse.json();
-
-
-
-        console.log(
-            "Applications:",
-            applicationData
-        );
-
-
-
-
-
-        // Token expired
-
-        if(
-            applicationResponse.status === 401 ||
-            applicationResponse.status === 403
-        ){
-
-
-            alert(
-                "Session expired. Login again"
-            );
-
-
-            logout();
-
-            return;
-
-
-        }
-
-
-
-
-
-        if(applicationResponse.ok){
-
-
-
-            const applications =
-            applicationData.applications || [];
-
-
-
-
-            // Total Applications
-
-            const applicationCount =
-            document.getElementById(
-                "applicationCount"
-            );
-
-
-            if(applicationCount){
-
-                applicationCount.textContent =
-                applications.length;
-
-            }
-
-
-
-
-
-            // Shortlisted Applications
-
-
-            const shortlisted =
-            applications.filter(
-
-                app =>
-                app.status === "Shortlisted"
-
-            );
-
-
-
-            const shortlistedCount =
-            document.getElementById(
-                "shortlistedCount"
-            );
-
-
-
-            if(shortlistedCount){
-
-
-                shortlistedCount.textContent =
-                shortlisted.length;
-
-
-            }
-
-
-
-        }
-
-
-
-
-    }
-
-    catch(error){
-
-
-        console.error(
-            "Dashboard Error:",
-            error
-        );
-
-
-
-        document.getElementById(
-            "internshipCount"
-        ).textContent = 0;
-
-
-
-        document.getElementById(
-            "applicationCount"
-        ).textContent = 0;
-
-
-
-        document.getElementById(
-            "shortlistedCount"
-        ).textContent = 0;
-
-
-
-    }
+    0;
 
 
 }
+
+
+
+
+
+
+
+
+// --------------------------
+// Student Applications
+// --------------------------
+
+
+const applicationResponse =
+await fetch(
+
+`${API_URL}/applications/my-applications`,
+
+{
+
+method:"GET",
+
+headers:{
+
+
+Authorization:
+`Bearer ${token}`
+
+
+}
+
+}
+
+);
+
+
+
+
+
+const applicationData =
+await applicationResponse.json();
+
+
+
+console.log(
+"Application Data:",
+applicationData
+);
+
+
+
+
+
+
+
+// Token expired
+
+if(
+applicationResponse.status === 401 ||
+applicationResponse.status === 403
+){
+
+
+alert(
+"Session expired. Please login again."
+);
+
+
+logout();
+
+return;
+
+
+}
+
+
+
+
+
+
+
+const applications =
+
+applicationData.applications || [];
+
+
+
+
+
+
+
+// Application Count
+
+
+const applicationCount =
+document.getElementById(
+"applicationCount"
+);
+
+
+
+if(applicationCount){
+
+
+applicationCount.textContent =
+applications.length;
+
+
+}
+
+
+
+
+
+
+
+
+// Shortlisted Count
+
+
+const shortlisted =
+
+applications.filter(
+
+application =>
+
+application.status === "Shortlisted"
+
+);
+
+
+
+
+
+const shortlistedCount =
+document.getElementById(
+"shortlistedCount"
+);
+
+
+
+if(shortlistedCount){
+
+
+shortlistedCount.textContent =
+shortlisted.length;
+
+
+}
+
+
+
+
+
+
+
+}
+
+catch(error){
+
+
+
+console.error(
+"Dashboard Loading Error:",
+error
+);
+
+
+
+
+const ids = [
+
+"internshipCount",
+
+"applicationCount",
+
+"shortlistedCount"
+
+];
+
+
+
+ids.forEach(id=>{
+
+
+const element =
+document.getElementById(id);
+
+
+
+if(element){
+
+element.textContent =
+0;
+
+}
+
+
+});
+
+
+
+}
+
+
+
+}
+
+
+
+
 
 
 
