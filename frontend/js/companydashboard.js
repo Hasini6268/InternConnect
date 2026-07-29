@@ -6,6 +6,7 @@ const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 
 const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user"));
 
 
 
@@ -24,22 +25,16 @@ if (!token) {
 
 
 
-
 // ==========================
 // Logout
 // ==========================
 
 function logout(){
 
-
     localStorage.removeItem("token");
-
     localStorage.removeItem("user");
 
-
-    window.location.href =
-    "login.html";
-
+    window.location.href = "login.html";
 
 }
 
@@ -54,12 +49,10 @@ function logout(){
 
 async function loadInternships(){
 
-
     try{
 
 
-        const response =
-        await fetch(
+        const response = await fetch(
 
             `${API_URL}/internships/my/internships`,
 
@@ -78,8 +71,7 @@ async function loadInternships(){
 
 
 
-        const data =
-        await response.json();
+        const data = await response.json();
 
 
 
@@ -97,9 +89,11 @@ async function loadInternships(){
 
 
 
+        if(!container) return;
+
+
+
         container.innerHTML = "";
-
-
 
 
 
@@ -110,7 +104,6 @@ async function loadInternships(){
             `<h3>${data.message || "Unable to load internships"}</h3>`;
 
             return;
-
 
         }
 
@@ -123,12 +116,10 @@ async function loadInternships(){
             data.internships.length === 0
         ){
 
-
             container.innerHTML =
             "<h3>No internships posted yet.</h3>";
 
             return;
-
 
         }
 
@@ -136,16 +127,11 @@ async function loadInternships(){
 
 
 
-
-        data.internships.forEach(
-        internship => {
-
+        data.internships.forEach(internship => {
 
 
             const card =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
             card.className =
@@ -167,6 +153,12 @@ async function loadInternships(){
 
 
             <p>
+            <strong>Company:</strong>
+            ${internship.companyName || "N/A"}
+            </p>
+
+
+            <p>
             <strong>Location:</strong>
             ${internship.location || "N/A"}
             </p>
@@ -184,6 +176,7 @@ async function loadInternships(){
             </p>
 
 
+
             <button onclick="viewApplicants('${internship._id}')">
 
             View Applicants
@@ -199,13 +192,11 @@ async function loadInternships(){
             </button>
 
 
-
             `;
 
 
 
             container.appendChild(card);
-
 
 
         });
@@ -214,12 +205,11 @@ async function loadInternships(){
 
     }
 
-
     catch(error){
 
 
         console.error(
-            "Internship Error:",
+            "Load Internship Error:",
             error
         );
 
@@ -232,8 +222,8 @@ async function loadInternships(){
     }
 
 
-
 }
+
 
 
 
@@ -257,7 +247,6 @@ document.getElementById(
 if(internshipForm){
 
 
-
 internshipForm.addEventListener(
 "submit",
 
@@ -268,18 +257,31 @@ e.preventDefault();
 
 
 
+// Get logged in company details
+
+const companyName =
+user?.companyName ||
+user?.fullName ||
+"Company";
+
+
+
+
 
 const internship = {
 
 
-
 title:
-document.getElementById("title").value,
+document.getElementById("title").value.trim(),
 
 
 
 description:
-document.getElementById("description").value,
+document.getElementById("description").value.trim(),
+
+
+
+companyName: companyName,
 
 
 
@@ -287,27 +289,28 @@ skills:
 document
 .getElementById("skills")
 .value
-.split(","),
+.split(",")
+.map(skill => skill.trim()),
 
 
 
 location:
-document.getElementById("location").value,
+document.getElementById("location").value.trim(),
 
 
 
 duration:
-document.getElementById("duration").value,
+document.getElementById("duration").value.trim(),
 
 
 
 stipend:
-document.getElementById("stipend").value,
+document.getElementById("stipend").value.trim(),
 
 
 
 mode:
-document.getElementById("mode").value,
+document.getElementById("mode").value.trim(),
 
 
 
@@ -375,22 +378,29 @@ data
 
 
 
-alert(
-data.message ||
-"Internship created"
-);
-
-
-
-
-
 if(response.ok){
+
+
+alert(
+"Internship created successfully 🎉"
+);
 
 
 internshipForm.reset();
 
 
 loadInternships();
+
+
+}
+
+else{
+
+
+alert(
+data.message ||
+"Failed to create internship"
+);
 
 
 }
@@ -404,6 +414,7 @@ catch(error){
 
 
 console.error(
+"Post Error:",
 error
 );
 
@@ -421,6 +432,7 @@ alert(
 
 
 }
+
 
 
 
@@ -450,7 +462,6 @@ return;
 
 
 try{
-
 
 
 const response =
@@ -494,6 +505,7 @@ data.message ||
 
 
 
+
 if(response.ok){
 
 loadInternships();
@@ -508,7 +520,10 @@ loadInternships();
 catch(error){
 
 
-console.error(error);
+console.error(
+"Delete Error:",
+error
+);
 
 
 }
@@ -516,6 +531,7 @@ console.error(error);
 
 
 }
+
 
 
 
@@ -544,6 +560,6 @@ window.location.href =
 
 
 
-// Start
+// Start Dashboard
 
 loadInternships();
