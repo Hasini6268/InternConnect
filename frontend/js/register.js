@@ -4,42 +4,53 @@ const API_URL = "https://internconnect-ngxa.onrender.com/api";
 const registerForm = document.getElementById("registerForm");
 
 
-registerForm.addEventListener("submit", async (e) => {
+registerForm.addEventListener("submit", async (e)=>{
 
     e.preventDefault();
 
 
-    const fullName = document.getElementById("fullName").value.trim();
-
-    const email = document.getElementById("email").value.trim();
-
-    const password = document.getElementById("password").value.trim();
-
-    const role = document.getElementById("role").value;
+    const fullName =
+    document.getElementById("fullName").value.trim();
 
 
+    const email =
+    document.getElementById("email").value.trim();
 
-    try {
+
+    const password =
+    document.getElementById("password").value.trim();
 
 
-        const response = await fetch(`${API_URL}/auth/register`, {
+    const role =
+    document.getElementById("role").value;
 
-            method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
 
-            body: JSON.stringify({
+    try{
 
-                fullName,
-                email,
-                password,
-                role
 
-            })
+        const response = await fetch(
+            `${API_URL}/auth/register`,
+            {
 
-        });
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+
+                body:JSON.stringify({
+
+                    fullName,
+                    email,
+                    password,
+                    role
+
+                })
+
+            }
+        );
 
 
 
@@ -47,40 +58,50 @@ registerForm.addEventListener("submit", async (e) => {
 
 
 
-        if (response.ok) {
+        if(response.ok){
 
 
-            showToast("Registration successful 🎉", "success");
+            showToast(
+                "Registration successful 🎉",
+                "success"
+            );
 
 
-            setTimeout(() => {
+            setTimeout(()=>{
 
-                window.location.href = "login.html";
+                window.location.href="login.html";
 
-            }, 2000);
-
-
-        } 
-        
-        else {
+            },1500);
 
 
-            showToast(data.message || "Registration failed ❌", "error");
+        }
+        else{
+
+
+            showToast(
+                data.message || "Registration failed",
+                "error"
+            );
 
 
         }
 
 
 
-    } 
-    
-    catch (error) {
+    }
+    catch(error){
 
 
-        console.log("Register Error:", error);
+        console.error(
+            "Register Error:",
+            error
+        );
 
 
-        showToast("Server error ❌", "error");
+        showToast(
+            "Unable to connect server",
+            "error"
+        );
 
 
     }
