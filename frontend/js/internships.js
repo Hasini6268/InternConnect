@@ -8,13 +8,8 @@ const API_URL = "https://internconnect-ngxa.onrender.com/api";
 const token = localStorage.getItem("token");
 
 
-
 const container =
-document.getElementById(
-    "internshipContainer"
-);
-
-
+document.getElementById("internshipContainer");
 
 
 
@@ -28,17 +23,35 @@ async function loadInternships(){
     try{
 
 
-        const response =
-        await fetch(
-
+        const response = await fetch(
             `${API_URL}/internships`
-
         );
 
 
 
-        const data =
-        await response.json();
+        const text = await response.text();
+
+
+        let data;
+
+
+        try{
+
+            data = JSON.parse(text);
+
+        }
+        catch(error){
+
+            console.error(
+                "Backend returned HTML:",
+                text
+            );
+
+            throw new Error(
+                "Invalid server response"
+            );
+
+        }
 
 
 
@@ -53,29 +66,21 @@ async function loadInternships(){
 
 
 
-
-
         if(!response.ok){
 
 
             container.innerHTML =
             `<h3>${data.message || "Unable to load internships"}</h3>`;
 
-
             return;
-
 
         }
 
 
 
 
-
         const internships =
-        data.internships ||
-        data ||
-        [];
-
+        data.internships || [];
 
 
 
@@ -86,9 +91,7 @@ async function loadInternships(){
             container.innerHTML =
             "<h3>No internships available</h3>";
 
-
             return;
-
 
         }
 
@@ -96,16 +99,12 @@ async function loadInternships(){
 
 
 
-        internships.forEach(
-        internship => {
+        internships.forEach(internship => {
 
 
 
             const card =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
 
             card.className =
@@ -113,50 +112,50 @@ async function loadInternships(){
 
 
 
-
-
             card.innerHTML = `
 
-
-            <h2>
-            ${internship.title}
-            </h2>
-
+                <h2>
+                ${internship.title}
+                </h2>
 
 
-            <p>
-            ${internship.description}
-            </p>
+                <p>
+                ${internship.description}
+                </p>
+
+
+                <p>
+                <strong>Company:</strong>
+                ${internship.companyName ||
+                internship.company?.fullName ||
+                "Company"}
+                </p>
+
+
+                <p>
+                <strong>Location:</strong>
+                ${internship.location || "Not specified"}
+                </p>
+
+
+                <p>
+                <strong>Duration:</strong>
+                ${internship.duration || "Not specified"}
+                </p>
+
+
+                <p>
+                <strong>Mode:</strong>
+                ${internship.mode || "Not specified"}
+                </p>
 
 
 
-            <p>
-            <strong>Company:</strong>
-            ${internship.companyName || "Company"}
-            </p>
+                <button onclick="applyInternship('${internship._id}')">
 
+                    Apply Now
 
-
-            <p>
-            <strong>Location:</strong>
-            ${internship.location || "Not specified"}
-            </p>
-
-
-
-            <p>
-            <strong>Duration:</strong>
-            ${internship.duration || "Not specified"}
-            </p>
-
-
-
-
-            <button onclick="applyInternship('${internship._id}')">
-
-            Apply Now
-
-            </button>
+                </button>
 
 
             `;
@@ -172,8 +171,6 @@ async function loadInternships(){
 
 
     }
-
-
     catch(error){
 
 
@@ -183,19 +180,14 @@ async function loadInternships(){
         );
 
 
-
         container.innerHTML =
-        "<h3>Server connection error</h3>";
-
+        "<h3>Unable to load internships</h3>";
 
 
     }
 
 
-
 }
-
-
 
 
 
@@ -225,9 +217,7 @@ async function applyInternship(id){
 
         return;
 
-
     }
-
 
 
 
@@ -249,6 +239,10 @@ async function applyInternship(id){
                 headers:{
 
 
+                    "Content-Type":
+                    "application/json",
+
+
                     Authorization:
                     `Bearer ${token}`
 
@@ -264,9 +258,34 @@ async function applyInternship(id){
 
 
 
+        const text =
+        await response.text();
 
-        const data =
-        await response.json();
+
+
+        let data;
+
+
+        try{
+
+            data = JSON.parse(text);
+
+        }
+        catch(error){
+
+
+            console.error(
+                "Apply API returned HTML:",
+                text
+            );
+
+
+            throw new Error(
+                "Invalid response from server"
+            );
+
+        }
+
 
 
 
@@ -278,26 +297,41 @@ async function applyInternship(id){
 
 
 
-        alert(
-            data.message ||
-            "Application submitted"
-        );
+        if(response.ok){
+
+
+            alert(
+                data.message ||
+                "Application submitted successfully"
+            );
+
+
+        }
+        else{
+
+
+            alert(
+                data.message ||
+                "Unable to apply"
+            );
+
+
+        }
 
 
 
     }
-
-
     catch(error){
 
 
         console.error(
+            "Apply Error:",
             error
         );
 
 
         alert(
-            "Server error"
+            "Server error while applying"
         );
 
 
@@ -306,7 +340,6 @@ async function applyInternship(id){
 
 
 }
-
 
 
 
