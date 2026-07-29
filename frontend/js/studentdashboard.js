@@ -1,6 +1,7 @@
 console.log("Student Dashboard JS Loaded");
 
 
+// Render Backend URL
 const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 
@@ -24,6 +25,7 @@ if (!token) {
 
 
 
+
 // ==========================
 // Display Student Name
 // ==========================
@@ -35,14 +37,17 @@ if (user) {
     document.getElementById("studentName");
 
 
-    if (nameElement) {
+    if(nameElement){
 
         nameElement.textContent =
         user.fullName;
 
     }
 
+
 }
+
+
 
 
 
@@ -50,7 +55,7 @@ if (user) {
 // Logout
 // ==========================
 
-function logout() {
+function logout(){
 
 
     localStorage.removeItem("token");
@@ -67,24 +72,27 @@ function logout() {
 
 
 
+
 // ==========================
 // Load Dashboard Data
 // ==========================
 
-async function loadDashboard() {
+async function loadDashboard(){
+
 
 
     try {
 
 
 
-        // Total Internships
+        // ==========================
+        // Load Internships Count
+        // ==========================
+
 
         const internshipResponse =
         await fetch(
-
             `${API_URL}/internships`
-
         );
 
 
@@ -94,17 +102,25 @@ async function loadDashboard() {
 
 
 
-        if (internshipData.success) {
+        console.log(
+            "Internships:",
+            internshipData
+        );
+
+
+
+
+        if(internshipResponse.ok){
 
 
             document.getElementById(
                 "internshipCount"
             ).textContent =
 
-            internshipData.totalInternships ||
-            internshipData.count ||
-            internshipData.internships?.length ||
-            0;
+            internshipData.internships
+            ? internshipData.internships.length
+            : internshipData.count || 0;
+
 
 
         }
@@ -112,7 +128,10 @@ async function loadDashboard() {
 
 
 
-        // Student Applications
+
+        // ==========================
+        // Load Applications
+        // ==========================
 
 
         const applicationResponse =
@@ -126,11 +145,14 @@ async function loadDashboard() {
 
                 headers:{
 
+
                     "Authorization":
                     `Bearer ${token}`,
 
+
                     "Content-Type":
                     "application/json"
+
 
                 }
 
@@ -145,22 +167,29 @@ async function loadDashboard() {
 
 
 
+        console.log(
+            "Applications:",
+            applicationData
+        );
 
-        if (
 
+
+
+
+        // Token expired
+
+        if(
             applicationResponse.status === 401 ||
             applicationResponse.status === 403
-
-        ) {
+        ){
 
 
             alert(
-                "Session expired. Please login again."
+                "Session expired. Login again"
             );
 
 
             logout();
-
 
             return;
 
@@ -170,7 +199,8 @@ async function loadDashboard() {
 
 
 
-        if(applicationData.success){
+
+        if(applicationResponse.ok){
 
 
 
@@ -180,13 +210,26 @@ async function loadDashboard() {
 
 
 
+            // Total Applications
+
+            const applicationCount =
             document.getElementById(
                 "applicationCount"
-            ).textContent =
-
-            applications.length;
+            );
 
 
+            if(applicationCount){
+
+                applicationCount.textContent =
+                applications.length;
+
+            }
+
+
+
+
+
+            // Shortlisted Applications
 
 
             const shortlisted =
@@ -199,11 +242,21 @@ async function loadDashboard() {
 
 
 
+            const shortlistedCount =
             document.getElementById(
                 "shortlistedCount"
-            ).textContent =
+            );
 
-            shortlisted.length;
+
+
+            if(shortlistedCount){
+
+
+                shortlistedCount.textContent =
+                shortlisted.length;
+
+
+            }
 
 
 
@@ -211,11 +264,10 @@ async function loadDashboard() {
 
 
 
+
     }
 
-
     catch(error){
-
 
 
         console.error(
@@ -225,27 +277,18 @@ async function loadDashboard() {
 
 
 
-        if(
-            document.getElementById("internshipCount")
-        )
         document.getElementById(
             "internshipCount"
         ).textContent = 0;
 
 
 
-        if(
-            document.getElementById("applicationCount")
-        )
         document.getElementById(
             "applicationCount"
         ).textContent = 0;
 
 
 
-        if(
-            document.getElementById("shortlistedCount")
-        )
         document.getElementById(
             "shortlistedCount"
         ).textContent = 0;
@@ -256,6 +299,7 @@ async function loadDashboard() {
 
 
 }
+
 
 
 
