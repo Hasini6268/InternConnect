@@ -1,8 +1,15 @@
 console.log("Student Dashboard JS Loaded");
-const API_URL = "http://localhost:5000/api";
+
+
+const API_URL = "https://internconnect-ngxa.onrender.com/api";
+
 
 const token = localStorage.getItem("token");
-const user = JSON.parse(localStorage.getItem("user"));
+
+const user = JSON.parse(
+    localStorage.getItem("user")
+);
+
 
 
 // ==========================
@@ -23,11 +30,15 @@ if (!token) {
 
 if (user) {
 
-    const nameElement = document.getElementById("studentName");
+
+    const nameElement =
+    document.getElementById("studentName");
+
 
     if (nameElement) {
 
-        nameElement.textContent = user.fullName;
+        nameElement.textContent =
+        user.fullName;
 
     }
 
@@ -41,13 +52,17 @@ if (user) {
 
 function logout() {
 
+
     localStorage.removeItem("token");
+
     localStorage.removeItem("user");
 
-    window.location.href = "login.html";
+
+    window.location.href =
+    "login.html";
+
 
 }
-
 
 
 
@@ -62,27 +77,34 @@ async function loadDashboard() {
     try {
 
 
-        // ==========================
-        // Total Internships
-        // ==========================
 
-        const internshipResponse = await fetch(
+        // Total Internships
+
+        const internshipResponse =
+        await fetch(
+
             `${API_URL}/internships`
+
         );
 
 
-        const internshipData = await internshipResponse.json();
+
+        const internshipData =
+        await internshipResponse.json();
 
 
 
         if (internshipData.success) {
 
 
-            document.getElementById("internshipCount")
-                .textContent =
-                internshipData.totalInternships ||
-                internshipData.count ||
-                0;
+            document.getElementById(
+                "internshipCount"
+            ).textContent =
+
+            internshipData.totalInternships ||
+            internshipData.count ||
+            internshipData.internships?.length ||
+            0;
 
 
         }
@@ -90,24 +112,25 @@ async function loadDashboard() {
 
 
 
-
-        // ==========================
         // Student Applications
-        // ==========================
 
-        const applicationResponse = await fetch(
+
+        const applicationResponse =
+        await fetch(
 
             `${API_URL}/applications/my-applications`,
 
             {
 
-                method: "GET",
+                method:"GET",
 
-                headers: {
+                headers:{
 
-                    "Authorization": `Bearer ${token}`,
+                    "Authorization":
+                    `Bearer ${token}`,
 
-                    "Content-Type": "application/json"
+                    "Content-Type":
+                    "application/json"
 
                 }
 
@@ -117,74 +140,81 @@ async function loadDashboard() {
 
 
 
-        const applicationData = await applicationResponse.json();
+        const applicationData =
+        await applicationResponse.json();
 
 
 
-
-        // Token expired
 
         if (
+
             applicationResponse.status === 401 ||
             applicationResponse.status === 403
+
         ) {
 
 
-            alert("Session expired. Please login again.");
+            alert(
+                "Session expired. Please login again."
+            );
+
 
             logout();
 
+
             return;
+
 
         }
 
 
 
 
-        if (applicationData.success) {
+        if(applicationData.success){
 
 
 
             const applications =
-                applicationData.applications || [];
-
-
-
-            // Total Applications
-
-            document.getElementById("applicationCount")
-                .textContent =
-                applications.length;
+            applicationData.applications || [];
 
 
 
 
-            // Shortlisted Applications
+            document.getElementById(
+                "applicationCount"
+            ).textContent =
+
+            applications.length;
+
+
+
 
             const shortlisted =
-                applications.filter(
+            applications.filter(
 
-                    app =>
-                    app.status === "Shortlisted"
+                app =>
+                app.status === "Shortlisted"
 
-                );
+            );
 
 
 
-            document.getElementById("shortlistedCount")
-                .textContent =
-                shortlisted.length;
+            document.getElementById(
+                "shortlistedCount"
+            ).textContent =
+
+            shortlisted.length;
 
 
 
         }
-
 
 
 
     }
 
-    catch(error) {
+
+    catch(error){
 
 
 
@@ -195,18 +225,30 @@ async function loadDashboard() {
 
 
 
-        document.getElementById("internshipCount")
-            .textContent = 0;
+        if(
+            document.getElementById("internshipCount")
+        )
+        document.getElementById(
+            "internshipCount"
+        ).textContent = 0;
 
 
 
-        document.getElementById("applicationCount")
-            .textContent = 0;
+        if(
+            document.getElementById("applicationCount")
+        )
+        document.getElementById(
+            "applicationCount"
+        ).textContent = 0;
 
 
 
-        document.getElementById("shortlistedCount")
-            .textContent = 0;
+        if(
+            document.getElementById("shortlistedCount")
+        )
+        document.getElementById(
+            "shortlistedCount"
+        ).textContent = 0;
 
 
 

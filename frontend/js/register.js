@@ -1,46 +1,50 @@
+console.log("Register JS Loaded");
+
 const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 
 const registerForm = document.getElementById("registerForm");
 
 
-registerForm.addEventListener("submit", async (e)=>{
+registerForm.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
 
     const fullName =
-    document.getElementById("fullName").value.trim();
+        document.getElementById("fullName").value.trim();
 
 
     const email =
-    document.getElementById("email").value.trim();
+        document.getElementById("email").value.trim();
 
 
     const password =
-    document.getElementById("password").value.trim();
+        document.getElementById("password").value.trim();
 
 
     const role =
-    document.getElementById("role").value;
+        document.getElementById("role").value;
 
 
 
-    try{
+    try {
 
 
         const response = await fetch(
             `${API_URL}/auth/register`,
             {
 
-                method:"POST",
+                method: "POST",
 
-                headers:{
-                    "Content-Type":"application/json"
+                headers: {
+
+                    "Content-Type": "application/json"
+
                 },
 
 
-                body:JSON.stringify({
+                body: JSON.stringify({
 
                     fullName,
                     email,
@@ -58,29 +62,26 @@ registerForm.addEventListener("submit", async (e)=>{
 
 
 
+        console.log("Register Response:", data);
+
+
+
         if(response.ok){
 
 
-            showToast(
-                "Registration successful 🎉",
-                "success"
-            );
+            alert("Registration successful 🎉");
 
 
-            setTimeout(()=>{
-
-                window.location.href="login.html";
-
-            },1500);
+            window.location.href = "login.html";
 
 
         }
         else{
 
 
-            showToast(
-                data.message || "Registration failed",
-                "error"
+            alert(
+                data.message ||
+                "Registration failed"
             );
 
 
@@ -98,9 +99,8 @@ registerForm.addEventListener("submit", async (e)=>{
         );
 
 
-        showToast(
-            "Unable to connect server",
-            "error"
+        alert(
+            "Cannot connect to server"
         );
 
 

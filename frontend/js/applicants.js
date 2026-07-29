@@ -1,4 +1,5 @@
-// InternConnect - Applicants
+console.log("Applicants JS Loaded");
+
 
 const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
@@ -6,20 +7,37 @@ const API_URL = "https://internconnect-ngxa.onrender.com/api";
 const token = localStorage.getItem("token");
 
 
+
 if (!token) {
+
     alert("Please login first");
+
     window.location.href = "login.html";
+
 }
 
 
-const applicantsContainer = document.getElementById("applicantsContainer");
 
 
-// Get internship id from URL
+const applicantsContainer =
+document.getElementById(
+    "applicantsContainer"
+);
 
-const params = new URLSearchParams(window.location.search);
 
-const internshipId = params.get("id");
+
+
+// Get Internship ID
+
+const params =
+new URLSearchParams(
+    window.location.search
+);
+
+
+const internshipId =
+params.get("id");
+
 
 
 
@@ -27,32 +45,36 @@ const internshipId = params.get("id");
 // Load Applicants
 // ===============================
 
-async function loadApplicants() {
+async function loadApplicants(){
 
 
-    if (!internshipId) {
+    if(!internshipId){
+
 
         applicantsContainer.innerHTML =
-        "<h3>Invalid Internship.</h3>";
+        "<h3>Invalid Internship</h3>";
 
         return;
+
 
     }
 
 
 
-    try {
+    try{
 
 
-        const response = await fetch(
+        const response =
+        await fetch(
 
             `${API_URL}/applications/applicants/${internshipId}`,
 
             {
 
-                headers: {
+                headers:{
 
-                    Authorization: `Bearer ${token}`
+                    Authorization:
+                    `Bearer ${token}`
 
                 }
 
@@ -62,7 +84,15 @@ async function loadApplicants() {
 
 
 
-        const data = await response.json();
+        const data =
+        await response.json();
+
+
+
+        console.log(
+            "Applicants:",
+            data
+        );
 
 
 
@@ -70,11 +100,12 @@ async function loadApplicants() {
 
 
 
-        if (!response.ok) {
+        if(!response.ok){
 
 
             applicantsContainer.innerHTML =
-            `<h3>${data.message}</h3>`;
+            `<h3>${data.message || "Unable to load applicants"}</h3>`;
+
 
             return;
 
@@ -83,11 +114,16 @@ async function loadApplicants() {
 
 
 
-        if (data.applications.length === 0) {
+
+        if(
+            !data.applications ||
+            data.applications.length === 0
+        ){
 
 
             applicantsContainer.innerHTML =
-            "<h3>No students have applied yet.</h3>";
+            "<h3>No students applied yet.</h3>";
+
 
             return;
 
@@ -96,24 +132,33 @@ async function loadApplicants() {
 
 
 
-        data.applications.forEach(application => {
+
+        data.applications.forEach(
+        application=>{
+
+
+            const student =
+            application.student;
 
 
 
-            const student = application.student;
+            const card =
+            document.createElement("div");
 
 
 
-            const card = document.createElement("div");
-
-
-            card.className = "internship-card";
+            card.className =
+            "internship-card";
 
 
 
             card.innerHTML = `
 
-                <h2>${student.fullName}</h2>
+
+                <h2>
+                ${student.fullName}
+                </h2>
+
 
 
                 <p>
@@ -122,16 +167,19 @@ async function loadApplicants() {
                 </p>
 
 
+
                 <p>
                 <strong>Phone:</strong>
                 ${student.phone || "Not Available"}
                 </p>
 
 
+
                 <p>
                 <strong>College:</strong>
                 ${student.college || "Not Available"}
                 </p>
+
 
 
                 <p>
@@ -141,19 +189,23 @@ async function loadApplicants() {
 
 
 
+
                 <select id="status-${application._id}">
 
                     <option value="Pending">
                     Pending
                     </option>
 
+
                     <option value="Shortlisted">
                     Shortlisted
                     </option>
 
+
                     <option value="Rejected">
                     Rejected
                     </option>
+
 
                 </select>
 
@@ -169,6 +221,7 @@ async function loadApplicants() {
 
                 </button>
 
+
             `;
 
 
@@ -179,7 +232,8 @@ async function loadApplicants() {
 
             document.getElementById(
                 `status-${application._id}`
-            ).value = application.status;
+            ).value =
+            application.status;
 
 
 
@@ -187,12 +241,16 @@ async function loadApplicants() {
 
 
 
-    } 
-    
-    catch (error) {
+    }
 
 
-        console.error(error);
+    catch(error){
+
+
+        console.error(
+            "Applicants Error:",
+            error
+        );
 
 
         applicantsContainer.innerHTML =
@@ -202,6 +260,7 @@ async function loadApplicants() {
     }
 
 
+
 }
 
 
@@ -209,39 +268,52 @@ async function loadApplicants() {
 
 
 // ===============================
-// Update Status
+// Update Application Status
 // ===============================
 
-async function updateStatus(applicationId) {
+async function updateStatus(applicationId){
+
 
 
     const status =
-    document.getElementById(`status-${applicationId}`).value;
+    document.getElementById(
+        `status-${applicationId}`
+    ).value;
 
 
 
-    try {
+    try{
 
 
-        const response = await fetch(
+        const response =
+        await fetch(
 
             `${API_URL}/applications/status/${applicationId}`,
 
             {
 
-                method: "PUT",
+                method:"PUT",
 
 
-                headers: {
+                headers:{
 
-                    "Content-Type": "application/json",
 
-                    Authorization: `Bearer ${token}`
+                    "Content-Type":
+                    "application/json",
+
+
+                    Authorization:
+                    `Bearer ${token}`
+
 
                 },
 
 
-                body: JSON.stringify({ status })
+                body:
+                JSON.stringify({
+                    status
+                })
+
 
             }
 
@@ -249,37 +321,51 @@ async function updateStatus(applicationId) {
 
 
 
-        const data = await response.json();
+        const data =
+        await response.json();
 
 
 
-        alert(data.message);
+        alert(
+            data.message ||
+            "Status updated"
+        );
 
 
 
-        if (response.ok) {
+        if(response.ok){
+
 
             loadApplicants();
+
 
         }
 
 
 
-    } 
-    
-    catch (error) {
+    }
 
 
-        console.error(error);
+    catch(error){
 
 
-        alert("Server Error");
+        console.error(
+            "Update Status Error:",
+            error
+        );
+
+
+        alert(
+            "Server Error"
+        );
 
 
     }
 
 
+
 }
+
 
 
 
