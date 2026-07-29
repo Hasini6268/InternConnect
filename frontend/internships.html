@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>InternConnect | Internships</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+
+    <h1>Available Internships</h1>
+
+
+    <div id="internshipContainer">
+
+        Loading internships...
+
+    </div>
+
+
+
+    <!-- Application Form Modal -->
+
+    <div id="applicationModal" style="display:none;">
+
+        <h2>Apply for Internship</h2>
+
+
+        <form id="applicationForm">
+
+
+            <input 
+                type="hidden" 
+                id="internshipId"
+            >
+
+
+            <label>
+                Phone Number
+            </label>
+
+            <input 
+                type="text" 
+                id="phone"
+                placeholder="Enter phone number"
+                required
+            >
+
+
+
+            <label>
+                College Name
+            </label>
+
+            <input 
+                type="text" 
+                id="college"
+                placeholder="Enter college name"
+                required
+            >
+
+
+
+            <label>
+                Skills
+            </label>
+
+            <input 
+                type="text" 
+                id="skills"
+                placeholder="Eg: Java, Python, React"
+                required
+            >
+
+
+
+            <label>
+                Upload Resume
+            </label>
+
+            <input 
+                type="file" 
+                id="resume"
+                accept=".pdf"
+                required
+            >
+
+
+
+            <label>
+                Cover Letter
+            </label>
+
+            <textarea 
+                id="coverLetter"
+                placeholder="Write a short cover letter">
+            </textarea>
+
+
+
+            <button type="submit">
+                Submit Application
+            </button>
+
+
+            <button type="button" onclick="closeApplicationForm()">
+                Cancel
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+
+    <script src="js/internships.js"></script>
+
+
+</body>
+
+</html>
