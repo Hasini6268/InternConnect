@@ -1,12 +1,17 @@
 console.log("Applicants JS Loaded");
 
 
+// Render Backend URL
 const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 
 const token = localStorage.getItem("token");
 
 
+
+// ==========================
+// Check Login
+// ==========================
 
 if (!token) {
 
@@ -26,7 +31,6 @@ document.getElementById(
 
 
 
-
 // Get Internship ID
 
 const params =
@@ -41,23 +45,28 @@ params.get("id");
 
 
 
-// ===============================
+
+
+// ==========================
 // Load Applicants
-// ===============================
+// ==========================
 
 async function loadApplicants(){
+
 
 
     if(!internshipId){
 
 
         applicantsContainer.innerHTML =
-        "<h3>Invalid Internship</h3>";
+        "<h3>Invalid Internship ID</h3>";
 
         return;
 
 
     }
+
+
 
 
 
@@ -73,14 +82,18 @@ async function loadApplicants(){
 
                 headers:{
 
+
                     Authorization:
                     `Bearer ${token}`
+
 
                 }
 
             }
 
         );
+
+
 
 
 
@@ -96,7 +109,11 @@ async function loadApplicants(){
 
 
 
+
+
         applicantsContainer.innerHTML = "";
+
+
 
 
 
@@ -111,6 +128,9 @@ async function loadApplicants(){
 
 
         }
+
+
+
 
 
 
@@ -133,8 +153,12 @@ async function loadApplicants(){
 
 
 
+
+
+
         data.applications.forEach(
-        application=>{
+        application => {
+
 
 
             const student =
@@ -143,7 +167,9 @@ async function loadApplicants(){
 
 
             const card =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
 
@@ -152,77 +178,70 @@ async function loadApplicants(){
 
 
 
+
+
             card.innerHTML = `
 
 
-                <h2>
-                ${student.fullName}
-                </h2>
+            <h2>
+            ${student.fullName}
+            </h2>
 
 
 
-                <p>
-                <strong>Email:</strong>
-                ${student.email}
-                </p>
+            <p>
+            <strong>Email:</strong>
+            ${student.email}
+            </p>
 
 
 
-                <p>
-                <strong>Phone:</strong>
-                ${student.phone || "Not Available"}
-                </p>
+            <p>
+            <strong>Status:</strong>
+            ${application.status}
+            </p>
 
 
 
-                <p>
-                <strong>College:</strong>
-                ${student.college || "Not Available"}
-                </p>
+            <select id="status-${application._id}">
+
+
+                <option value="Pending">
+                Pending
+                </option>
+
+
+                <option value="Shortlisted">
+                Shortlisted
+                </option>
+
+
+                <option value="Rejected">
+                Rejected
+                </option>
 
 
 
-                <p>
-                <strong>Status:</strong>
-                ${application.status}
-                </p>
+            </select>
+
+
+
+            <br><br>
 
 
 
 
-                <select id="status-${application._id}">
+            <button onclick="updateStatus('${application._id}')">
 
-                    <option value="Pending">
-                    Pending
-                    </option>
+            Update Status
 
+            </button>
 
-                    <option value="Shortlisted">
-                    Shortlisted
-                    </option>
-
-
-                    <option value="Rejected">
-                    Rejected
-                    </option>
-
-
-                </select>
-
-
-
-                <br><br>
-
-
-
-                <button onclick="updateStatus('${application._id}')">
-
-                    Update Status
-
-                </button>
 
 
             `;
+
+
 
 
 
@@ -230,10 +249,13 @@ async function loadApplicants(){
 
 
 
+
+
             document.getElementById(
                 `status-${application._id}`
             ).value =
             application.status;
+
 
 
 
@@ -254,7 +276,8 @@ async function loadApplicants(){
 
 
         applicantsContainer.innerHTML =
-        "<h3>Unable to load applicants.</h3>";
+        "<h3>Server connection error</h3>";
+
 
 
     }
@@ -267,100 +290,120 @@ async function loadApplicants(){
 
 
 
-// ===============================
+
+
+
+
+// ==========================
 // Update Application Status
-// ===============================
+// ==========================
 
 async function updateStatus(applicationId){
 
 
 
-    const status =
-    document.getElementById(
-        `status-${applicationId}`
-    ).value;
+const status =
+document.getElementById(
+    `status-${applicationId}`
+).value;
 
 
 
-    try{
 
 
-        const response =
-        await fetch(
-
-            `${API_URL}/applications/status/${applicationId}`,
-
-            {
-
-                method:"PUT",
+try{
 
 
-                headers:{
+const response =
+await fetch(
+
+`${API_URL}/applications/status/${applicationId}`,
+
+{
 
 
-                    "Content-Type":
-                    "application/json",
+method:"PUT",
 
 
-                    Authorization:
-                    `Bearer ${token}`
+headers:{
 
 
-                },
+"Content-Type":
+"application/json",
 
 
-                body:
-                JSON.stringify({
-                    status
-                })
+Authorization:
+`Bearer ${token}`
 
 
-            }
-
-        );
+},
 
 
+body:
+JSON.stringify({
+    status
+})
 
-        const data =
-        await response.json();
 
+}
 
-
-        alert(
-            data.message ||
-            "Status updated"
-        );
+);
 
 
 
-        if(response.ok){
-
-
-            loadApplicants();
-
-
-        }
 
 
 
-    }
+const data =
+await response.json();
 
 
-    catch(error){
+
+console.log(
+"Status Update:",
+data
+);
 
 
-        console.error(
-            "Update Status Error:",
-            error
-        );
 
 
-        alert(
-            "Server Error"
-        );
+alert(
+data.message ||
+"Status updated"
+);
 
 
-    }
+
+
+
+if(response.ok){
+
+
+loadApplicants();
+
+
+}
+
+
+
+
+}
+
+
+catch(error){
+
+
+console.error(
+error
+);
+
+
+alert(
+"Server Error"
+);
+
+
+}
 
 
 
@@ -368,5 +411,9 @@ async function updateStatus(applicationId){
 
 
 
+
+
+
+// Start
 
 loadApplicants();
