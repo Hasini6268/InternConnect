@@ -1,7 +1,8 @@
 const express = require("express");
 
-const protect = require("../middleware/authMiddleware");
-const uploadResumeMiddleware = require("../middleware/uploadResume");
+// Correct middleware imports
+const protect = require("../middleware/authmiddleware");
+const uploadResumeMiddleware = require("../middleware/uploadresume");
 
 const {
   getProfile,
