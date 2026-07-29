@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 
 const registerForm = document.getElementById("registerForm");
@@ -24,13 +24,13 @@ registerForm.addEventListener("submit", async (e) => {
 
         const response = await fetch(`${API_URL}/auth/register`, {
 
-            method:"POST",
+            method: "POST",
 
-            headers:{
-                "Content-Type":"application/json"
+            headers: {
+                "Content-Type": "application/json"
             },
 
-            body:JSON.stringify({
+            body: JSON.stringify({
 
                 fullName,
                 email,
@@ -47,41 +47,40 @@ registerForm.addEventListener("submit", async (e) => {
 
 
 
-        if(response.ok){
+        if (response.ok) {
 
 
-            showToast("Registration successful 🎉","success");
+            showToast("Registration successful 🎉", "success");
 
 
-            setTimeout(()=>{
+            setTimeout(() => {
 
-                window.location.href="login.html";
+                window.location.href = "login.html";
 
-            },2000);
+            }, 2000);
+
+
+        } 
+        
+        else {
+
+
+            showToast(data.message || "Registration failed ❌", "error");
 
 
         }
 
-        else{
 
 
-            showToast(data.message || "Registration failed ❌","error");
+    } 
+    
+    catch (error) {
 
 
-        }
+        console.log("Register Error:", error);
 
 
-
-    }
-
-
-    catch(error){
-
-
-        console.log(error);
-
-
-        showToast("Server error ❌","error");
+        showToast("Server error ❌", "error");
 
 
     }

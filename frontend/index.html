@@ -3,98 +3,103 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternConnect | Internship Portal</title>
 
-<title>InternConnect | Internship Portal</title>
+    <link rel="stylesheet" href="css/style.css">
 
-<link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
 
-<style>
+        .stats{
+            padding:70px 8%;
+            background:#eef5ff;
+        }
 
-.stats{
-padding:70px 8%;
-background:#eef5ff;
-}
+        .stats h2{
+            text-align:center;
+            color:#0d6efd;
+            margin-bottom:40px;
+            font-size:36px;
+        }
 
-.stats h2{
-text-align:center;
-color:#0d6efd;
-margin-bottom:40px;
-font-size:36px;
-}
+        .stats-container{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:25px;
+        }
 
-.stats-container{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:25px;
-}
+        .stat-card{
+            background:white;
+            padding:30px;
+            border-radius:15px;
+            text-align:center;
+            box-shadow:0 10px 25px rgba(0,0,0,.08);
+            transition:.3s;
+        }
 
-.stat-card{
-background:white;
-padding:30px;
-border-radius:15px;
-text-align:center;
-box-shadow:0 10px 25px rgba(0,0,0,.08);
-transition:.3s;
-}
+        .stat-card:hover{
+            transform:translateY(-8px);
+        }
 
-.stat-card:hover{
-transform:translateY(-8px);
-}
+        .stat-card h1{
+            font-size:45px;
+            color:#0d6efd;
+            margin-bottom:10px;
+        }
 
-.stat-card h1{
-font-size:45px;
-color:#0d6efd;
-margin-bottom:10px;
-}
+        .stat-card p{
+            font-size:18px;
+            color:#666;
+        }
 
-.stat-card p{
-font-size:18px;
-color:#666;
-}
+        .cta{
+            padding:90px 10%;
+            text-align:center;
+            background:linear-gradient(135deg,#0d6efd,#4f9dff);
+            color:white;
+        }
 
-.cta{
-padding:90px 10%;
-text-align:center;
-background:linear-gradient(135deg,#0d6efd,#4f9dff);
-color:white;
-}
+        .cta h2{
+            font-size:40px;
+            margin-bottom:20px;
+            color:white;
+        }
 
-.cta h2{
-font-size:40px;
-margin-bottom:20px;
-}
+        .cta p{
+            max-width:700px;
+            margin:auto;
+            margin-bottom:30px;
+            line-height:1.8;
+        }
 
-.cta p{
-max-width:700px;
-margin:auto;
-margin-bottom:30px;
-line-height:1.8;
-}
+        .cta-button{
+            margin-top:20px;
+        }
 
-.cta a{
-background:white;
-color:#0d6efd;
-padding:14px 30px;
-border-radius:8px;
-text-decoration:none;
-font-weight:600;
-display:inline-block;
-}
+        .cta a{
+            display:inline-block;
+            background:white;
+            color:#0d6efd;
+            padding:14px 30px;
+            border-radius:8px;
+            text-decoration:none;
+            font-weight:600;
+        }
 
-.cta a:hover{
-background:#eef5ff;
-}
+        .cta a:hover{
+            background:#eef5ff;
+        }
 
-</style>
+    </style>
 
 </head>
 
@@ -102,188 +107,157 @@ background:#eef5ff;
 
 <nav class="navbar">
 
-<div class="logo">
-InternConnect
-</div>
+    <div class="logo">
+        InternConnect
+    </div>
 
-<ul class="nav-links">
+    <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#stats">Statistics</a></li>
+    </ul>
 
-<li><a href="#home">Home</a></li>
+    <div class="nav-buttons">
+        <a href="login.html" class="btn btn-outline" aria-label="Login">
+            Login
+        </a>
 
-<li><a href="#about">About</a></li>
-
-<li><a href="#features">Features</a></li>
-
-<li><a href="#stats">Statistics</a></li>
-
-</ul>
-
-<div class="nav-buttons">
-
-<a href="login.html" class="btn btn-outline">
-Login
-</a>
-
-<a href="register.html" class="btn btn-primary">
-Register
-</a>
-
-</div>
+        <a href="register.html" class="btn btn-primary" aria-label="Register">
+            Register
+        </a>
+    </div>
 
 </nav>
 
 <section class="hero" id="home">
 
-<div class="hero-content">
+    <div class="hero-content">
 
-<h1>Find Your Dream Internship</h1>
+        <h1>Find Your Dream Internship</h1>
 
-<p>
+        <p>
+            Connect students with top companies, discover exciting internship opportunities,
+            and simplify recruitment through one powerful platform.
+        </p>
 
-Connect students with top companies, discover exciting internship opportunities,
-and simplify recruitment through one powerful platform.
+        <div class="hero-buttons">
 
-</p>
+            <a href="register.html" class="btn btn-primary">
+                Get Started
+            </a>
 
-<div class="hero-buttons">
+            <a href="login.html" class="btn btn-outline">
+                Login
+            </a>
 
-<a href="register.html" class="btn btn-primary">
-Get Started
-</a>
+        </div>
 
-<a href="login.html" class="btn btn-outline">
-Login
-</a>
-
-</div>
-
-</div>
+    </div>
 
 </section>
 
 <section class="about" id="about">
 
-<h2>About InternConnect</h2>
+    <h2>About InternConnect</h2>
 
-<p>
-
-InternConnect is a complete Internship Management System designed to connect
-students, companies, and administrators through one easy-to-use platform.
-Students can explore internships and apply online, companies can manage hiring,
-and administrators can monitor the entire recruitment process efficiently.
-
-</p>
+    <p>
+        InternConnect is a complete Internship Management System designed to connect
+        students, companies, and administrators through one easy-to-use platform.
+        Students can explore internships and apply online, companies can manage hiring,
+        and administrators can monitor the entire recruitment process efficiently.
+    </p>
 
 </section>
 
 <section class="features" id="features">
 
-<h2>Platform Features</h2>
+    <h2>Platform Features</h2>
 
-<div class="feature-container">
+    <div class="feature-container">
 
-<div class="feature-card">
+        <div class="feature-card">
+            <h3>🎓 Students</h3>
+            <p>
+                Browse internships, submit applications,
+                track application status and manage your career.
+            </p>
+        </div>
 
-<h3>🎓 Students</h3>
+        <div class="feature-card">
+            <h3>🏢 Companies</h3>
+            <p>
+                Post internships, manage applicants,
+                shortlist candidates and hire efficiently.
+            </p>
+        </div>
 
-<p>
+        <div class="feature-card">
+            <h3>👨‍💼 Administrator</h3>
+            <p>
+                Monitor users, internships,
+                applications and overall platform activities.
+            </p>
+        </div>
 
-Browse internships, submit applications,
-track application status and manage your career.
-
-</p>
-
-</div>
-
-<div class="feature-card">
-
-<h3>🏢 Companies</h3>
-
-<p>
-
-Post internships, manage applicants,
-shortlist candidates and hire efficiently.
-
-</p>
-
-</div>
-
-<div class="feature-card">
-
-<h3>👨‍💼 Administrator</h3>
-
-<p>
-
-Monitor users, internships,
-applications and overall platform activities.
-
-</p>
-
-</div>
-
-</div>
+    </div>
 
 </section>
 
 <section class="stats" id="stats">
 
-<h2>Platform Statistics</h2>
+    <h2>Platform Statistics</h2>
 
-<div class="stats-container">
+    <div class="stats-container">
 
-<div class="stat-card">
-<h1>100+</h1>
-<p>Students</p>
-</div>
+        <div class="stat-card">
+            <h1>100+</h1>
+            <p>Students</p>
+        </div>
 
-<div class="stat-card">
-<h1>30+</h1>
-<p>Companies</p>
-</div>
+        <div class="stat-card">
+            <h1>30+</h1>
+            <p>Companies</p>
+        </div>
 
-<div class="stat-card">
-<h1>150+</h1>
-<p>Internships</p>
-</div>
+        <div class="stat-card">
+            <h1>150+</h1>
+            <p>Internships</p>
+        </div>
 
-<div class="stat-card">
-<h1>500+</h1>
-<p>Applications</p>
-</div>
+        <div class="stat-card">
+            <h1>500+</h1>
+            <p>Applications</p>
+        </div>
 
-</div>
+    </div>
 
 </section>
 
 <section class="cta">
 
-<h2>Start Your Career Journey Today</h2>
+    <h2>Start Your Career Journey Today</h2>
 
-<p>
+    <p>
+        Join InternConnect to explore internship opportunities, connect with leading
+        companies, and build your professional future.
+    </p>
 
-Join InternConnect to explore internship opportunities, connect with leading
-companies, and build your professional future.
-
-</p>
-
-<a href="register.html">
-
-Create Free Account
-
-</a>
+    <div class="cta-button">
+        <a href="register.html">
+            Create Free Account
+        </a>
+    </div>
 
 </section>
 
 <footer>
 
-<p>
-
-© 2026 InternConnect | Internship Management Portal
-
-</p>
+    <p>
+        © 2026 InternConnect | Internship Management Portal
+    </p>
 
 </footer>
 
 </body>
-
 </html>
