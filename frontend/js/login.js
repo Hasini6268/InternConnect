@@ -7,8 +7,6 @@ const API_URL = "https://internconnect-ngxa.onrender.com/api";
 const loginForm = document.getElementById("loginForm");
 
 
-if (loginForm) {
-
 
 loginForm.addEventListener("submit", async (e) => {
 
@@ -18,12 +16,14 @@ loginForm.addEventListener("submit", async (e) => {
 
 
     const email =
-    document.getElementById("email").value.trim();
+        document.getElementById("email").value.trim();
 
 
 
     const password =
-    document.getElementById("password").value.trim();
+        document.getElementById("password").value.trim();
+
+
 
 
 
@@ -32,13 +32,10 @@ loginForm.addEventListener("submit", async (e) => {
 
 
         const response = await fetch(
-
             `${API_URL}/auth/login`,
-
             {
 
                 method: "POST",
-
 
                 headers: {
 
@@ -50,15 +47,13 @@ loginForm.addEventListener("submit", async (e) => {
                 body: JSON.stringify({
 
                     email,
-
                     password
 
                 })
 
-
             }
-
         );
+
 
 
 
@@ -66,12 +61,16 @@ loginForm.addEventListener("submit", async (e) => {
 
 
 
-        console.log("Login Response:", data);
+        console.log(
+            "Login Response:",
+            data
+        );
 
 
 
 
-        if (response.ok) {
+
+        if(response.ok){
 
 
 
@@ -91,14 +90,16 @@ loginForm.addEventListener("submit", async (e) => {
 
 
 
-            alert("Login successful 🎉");
+            alert(
+                "Login successful 🎉"
+            );
 
 
 
 
-            // Redirect based on role
+            // Role based navigation
 
-            if (data.user.role === "admin") {
+            if(data.user.role === "admin"){
 
 
                 window.location.href =
@@ -106,9 +107,7 @@ loginForm.addEventListener("submit", async (e) => {
 
 
             }
-
-
-            else if (data.user.role === "company") {
+            else if(data.user.role === "company"){
 
 
                 window.location.href =
@@ -116,9 +115,7 @@ loginForm.addEventListener("submit", async (e) => {
 
 
             }
-
-
-            else {
+            else{
 
 
                 window.location.href =
@@ -130,9 +127,7 @@ loginForm.addEventListener("submit", async (e) => {
 
 
         }
-
-
-        else {
+        else{
 
 
             alert(
@@ -147,9 +142,7 @@ loginForm.addEventListener("submit", async (e) => {
 
 
     }
-
-
-    catch(error) {
+    catch(error){
 
 
 
@@ -161,16 +154,11 @@ loginForm.addEventListener("submit", async (e) => {
 
 
         alert(
-            "Server error. Please try again"
+            "Server connection failed"
         );
-
 
 
     }
 
 
-
 });
-
-
-}
