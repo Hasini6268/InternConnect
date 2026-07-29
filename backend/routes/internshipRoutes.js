@@ -11,9 +11,9 @@ const {
   deleteInternship,
 } = require("../controllers/internshipController");
 
-const protect = require("../middleware/authMiddleware");
-const authorizeRoles = require("../middleware/roleMiddleware");
-
+// Correct middleware imports
+const protect = require("../middleware/authmiddleware");
+const authorizeRoles = require("../middleware/rolemiddleware");
 
 // ==============================
 // Public Routes
@@ -24,7 +24,6 @@ router.get("/", getAllInternships);
 
 // Get internship by ID
 router.get("/:id", getInternshipById);
-
 
 // ==============================
 // Company Routes
