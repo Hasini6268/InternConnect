@@ -1,0 +1,45 @@
+# Query: localhost:5000
+# ContextLines: 1
+
+9 results - 9 files
+
+README.md:
+  152  ```
+  153: http://localhost:5000
+  154  ```
+
+frontend\js\admindashboard.js:
+  1 const API_URL = "https://internconnect-ngxa.onrender.com/api";
+  2  
+
+frontend\js\applicants.js:
+  2  
+  3: const API_URL = "https://internconnect-ngxa.onrender.com/api";
+  4  
+
+frontend\js\companydashboard.js:
+  2  
+  3: const API_URL = "https://internconnect-ngxa.onrender.com/api";
+  4  
+
+frontend\js\internships.js:
+  2  
+  3: const API_URL = "https://internconnect-ngxa.onrender.com/api";
+  4  
+
+frontend\js\login.js:
+  1: const API_URL = "https://internconnect-ngxa.onrender.com/api";
+  2  
+
+frontend\js\myapplications.js:
+  3  
+  4: const API_URL = "https://internconnect-ngxa.onrender.com/api";
+  5  
+
+frontend\js\register.js:
+  1: const API_URL = "https://internconnect-ngxa.onrender.com/api";
+  2  
+
+frontend\js\studentdashboard.js:
+  1  console.log("Student Dashboard JS Loaded");
+  2: const API_URL = "https://internconnect-ngxa.onrender.com/api";
