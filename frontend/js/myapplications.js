@@ -1,86 +1,81 @@
-// InternConnect - myapplications.js
+console.log("My Applications JS Loaded");
 
 
-const API_URL = "http://localhost:5000/api";
+// Render Backend URL
+const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 
-const applicationsContainer = document.getElementById(
-    "applicationsContainer"
-);
+const token = localStorage.getItem("token");
 
 
+// Check login
+if (!token) {
 
-async function loadApplications() {
+    alert("Please login first");
 
+    window.location.href = "login.html";
 
-    const token = localStorage.getItem("token");
-
-
-    if (!token) {
-
-        alert("Please login first");
-
-        window.location.href = "login.html";
-
-        return;
-
-    }
+}
 
 
 
-    try {
+const container =
+document.getElementById("applicationsContainer");
+
+
+
+// ==========================
+// Load My Applications
+// ==========================
+
+async function loadApplications(){
+
+
+    try{
 
 
         const response = await fetch(
+
             `${API_URL}/applications/my-applications`,
+
             {
 
-                method: "GET",
+                method:"GET",
 
-                headers: {
+                headers:{
 
-                    "Authorization": `Bearer ${token}`
+                    Authorization:
+                    `Bearer ${token}`
 
                 }
 
             }
+
         );
 
 
 
-        const data = await response.json();
+        const data =
+        await response.json();
 
 
 
-        console.log(data);
+        console.log(
+            "My Applications:",
+            data
+        );
 
 
 
-        if (!response.ok) {
-
-            alert(data.message || "Failed to load applications");
-
-            return;
-
-        }
+        container.innerHTML = "";
 
 
 
-        applicationsContainer.innerHTML = "";
+        if(!response.ok){
 
 
-
-        if (!data.applications || data.applications.length === 0) {
-
-
-            applicationsContainer.innerHTML = `
-
-                <h3>
-                    No applications found
-                </h3>
-
-            `;
-
+            container.innerHTML =
+            `<h3>${data.message || "Unable to load applications"}</h3>`;
 
             return;
 
@@ -88,14 +83,42 @@ async function loadApplications() {
 
 
 
-        data.applications.forEach((application) => {
+
+        const applications =
+        data.applications || [];
 
 
 
-            const card = document.createElement("div");
+
+        if(applications.length === 0){
 
 
-            card.classList.add("internship-card");
+            container.innerHTML =
+            "<h3>No applications submitted yet.</h3>";
+
+            return;
+
+
+        }
+
+
+
+
+        applications.forEach(application=>{
+
+
+            const internship =
+            application.internship;
+
+
+
+            const card =
+            document.createElement("div");
+
+
+
+            card.className =
+            "internship-card";
 
 
 
@@ -103,79 +126,31 @@ async function loadApplications() {
 
 
                 <h2>
-                    ${application.internship.title}
+                    ${internship.title}
                 </h2>
 
 
                 <p>
                     <strong>Company:</strong>
-                    ${
-                        application.internship.companyName ||
-                        "Not specified"
-                    }
-                </p>
-
-
-                <p>
-                    <strong>Description:</strong>
-                    ${
-                        application.internship.description ||
-                        "No description available"
-                    }
+                    ${internship.companyName || "N/A"}
                 </p>
 
 
                 <p>
                     <strong>Location:</strong>
-                    ${
-                        application.internship.location ||
-                        "Remote"
-                    }
+                    ${internship.location || "N/A"}
                 </p>
 
 
                 <p>
-                    <strong>Duration:</strong>
-                    ${
-                        application.internship.duration ||
-                        "Not specified"
-                    }
-                </p>
-
-
-                <p>
-                    <strong>Stipend:</strong>
-                    ${
-                        application.internship.stipend ||
-                        "Not specified"
-                    }
-                </p>
-
-
-                <p>
-                    <strong>Mode:</strong>
-                    ${
-                        application.internship.mode ||
-                        "Not specified"
-                    }
-                </p>
-
-
-                <p>
-                    <strong>Application Status:</strong>
-                    ${
-                        application.status
-                    }
+                    <strong>Status:</strong>
+                    ${application.status}
                 </p>
 
 
                 <p>
                     <strong>Applied On:</strong>
-                    ${
-                        new Date(
-                            application.createdAt
-                        ).toDateString()
-                    }
+                    ${new Date(application.createdAt).toLocaleDateString()}
                 </p>
 
 
@@ -183,7 +158,7 @@ async function loadApplications() {
 
 
 
-            applicationsContainer.appendChild(card);
+            container.appendChild(card);
 
 
 
@@ -191,20 +166,30 @@ async function loadApplications() {
 
 
 
-    } catch(error) {
+    }
 
 
-        console.error(error);
+    catch(error){
 
 
-        alert("Cannot connect to server");
+        console.error(
+            "Applications Error:",
+            error
+        );
+
+
+        container.innerHTML =
+        "<h3>Server connection error</h3>";
 
 
     }
 
 
+
 }
 
 
+
+// Start
 
 loadApplications();
