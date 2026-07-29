@@ -25,7 +25,9 @@ async function loadInternships(){
 
 
         const response = await fetch(
+
             `${API_URL}/internships`
+
         );
 
 
@@ -49,12 +51,23 @@ async function loadInternships(){
         if(!response.ok){
 
 
-            container.innerHTML =
-            `<h3>${data.message || "Unable to load internships"}</h3>`;
+            container.innerHTML = `
+
+            <h3>
+            ${
+                data.message ||
+                "Unable to load internships"
+            }
+            </h3>
+
+            `;
+
 
             return;
 
         }
+
+
 
 
 
@@ -66,11 +79,18 @@ async function loadInternships(){
 
 
 
+
         if(internships.length === 0){
 
 
-            container.innerHTML =
-            "<h3>No internships available</h3>";
+            container.innerHTML = `
+
+            <h3>
+            No internships available
+            </h3>
+
+            `;
+
 
             return;
 
@@ -80,33 +100,49 @@ async function loadInternships(){
 
 
 
+
+
         internships.forEach(
-        internship => {
+
+            internship => {
 
 
 
-            const card =
-            document.createElement("div");
+                const card =
+                document.createElement(
+                    "div"
+                );
 
 
 
-            card.className =
-            "internship-card";
+                card.className =
+                "internship-card";
 
 
 
-            card.innerHTML = `
+
+
+                card.innerHTML = `
+
 
 
                 <h2>
+
                 ${internship.title}
+
                 </h2>
 
 
 
+
+
                 <p>
+
                 ${internship.description}
+
                 </p>
+
+
 
 
 
@@ -117,8 +153,10 @@ async function loadInternships(){
                 Company:
                 </strong>
 
+
                 ${
                     internship.companyName ||
+                    internship.company?.companyName ||
                     internship.company?.fullName ||
                     "Company"
                 }
@@ -128,11 +166,15 @@ async function loadInternships(){
 
 
 
+
+
+
                 <p>
 
                 <strong>
                 Location:
                 </strong>
+
 
                 ${
                     internship.location ||
@@ -144,11 +186,14 @@ async function loadInternships(){
 
 
 
+
+
                 <p>
 
                 <strong>
                 Duration:
                 </strong>
+
 
                 ${
                     internship.duration ||
@@ -160,11 +205,15 @@ async function loadInternships(){
 
 
 
+
+
+
                 <p>
 
                 <strong>
                 Mode:
                 </strong>
+
 
                 ${
                     internship.mode ||
@@ -176,8 +225,35 @@ async function loadInternships(){
 
 
 
-                <button 
-                onclick="applyInternship('${internship._id}')">
+
+
+
+
+                <p>
+
+                <strong>
+                Stipend:
+                </strong>
+
+
+                ${
+                    internship.stipend ||
+                    "Not specified"
+                }
+
+                </p>
+
+
+
+
+
+
+
+                <button
+
+                onclick="applyInternship('${internship._id}')"
+
+                >
 
                     Apply Now
 
@@ -185,112 +261,14 @@ async function loadInternships(){
 
 
 
-            `;
 
+                `;
 
 
 
-            container.appendChild(card);
 
+                container.appendChild(card);
 
-
-        });
-
-
-
-
-    }
-    catch(error){
-
-
-        console.error(
-            "Internship Loading Error:",
-            error
-        );
-
-
-        container.innerHTML =
-        "<h3>Server connection error</h3>";
-
-    }
-
-
-}
-
-
-
-
-
-
-
-
-// ==========================
-// Apply Internship
-// ==========================
-
-async function applyInternship(id){
-
-
-
-    if(!token){
-
-
-        alert(
-            "Please login first"
-        );
-
-
-        window.location.href =
-        "login.html";
-
-
-        return;
-
-    }
-
-
-
-
-
-    try{
-
-
-        const formData =
-        new FormData();
-
-
-
-        formData.append(
-            "internshipId",
-            id
-        );
-
-
-
-
-
-        const response =
-        await fetch(
-
-            `${API_URL}/applications/apply`,
-
-            {
-
-
-                method:"POST",
-
-
-                headers:{
-
-
-                    Authorization:
-                    `Bearer ${token}`
-
-
-                },
-
-
-                body:formData
 
 
             }
@@ -300,71 +278,85 @@ async function applyInternship(id){
 
 
 
-
-        const data =
-        await response.json();
-
-
-
-
-        console.log(
-            "Apply Response:",
-            data
-        );
-
-
-
-
-
-        if(response.ok){
-
-
-            alert(
-
-                data.message ||
-                "Application submitted successfully"
-
-            );
-
-
-        }
-        else{
-
-
-            alert(
-
-                data.message ||
-                "Application failed"
-
-            );
-
-
-        }
-
-
-
-
-
     }
+
+
     catch(error){
 
 
+
         console.error(
-            "Apply Error:",
+
+            "Internship Loading Error:",
             error
+
         );
 
 
-        alert(
-            "Server error while applying"
-        );
+
+        container.innerHTML = `
+
+        <h3>
+        Server connection error
+        </h3>
+
+        `;
+
 
 
     }
+
+
+}
+
+
+
+
+
+
+
+
+// ==========================
+// Open Application Form
+// ==========================
+
+function applyInternship(id){
+
+
+
+    if(!token){
+
+
+
+        alert(
+            "Please login first"
+        );
+
+
+
+        window.location.href =
+        "login.html";
+
+
+
+        return;
+
+
+    }
+
+
+
+
+
+
+    window.location.href =
+    `apply.html?id=${id}`;
 
 
 
 }
+
+
 
 
 
