@@ -1,10 +1,12 @@
 console.log("Company Dashboard JS Loaded");
 
 
+// Render Backend URL
 const API_URL = "https://internconnect-ngxa.onrender.com/api";
 
 
 const token = localStorage.getItem("token");
+
 
 
 // ==========================
@@ -21,11 +23,13 @@ if (!token) {
 
 
 
+
+
 // ==========================
 // Logout
 // ==========================
 
-function logout() {
+function logout(){
 
 
     localStorage.removeItem("token");
@@ -33,30 +37,35 @@ function logout() {
     localStorage.removeItem("user");
 
 
-    window.location.href = "login.html";
+    window.location.href =
+    "login.html";
 
 
 }
 
 
 
+
+
+
 // ==========================
-// Load Company Internships
+// Load My Internships
 // ==========================
 
-async function loadInternships() {
+async function loadInternships(){
 
 
-    try {
+    try{
 
 
-        const response = await fetch(
+        const response =
+        await fetch(
 
             `${API_URL}/internships/my/internships`,
 
             {
 
-                headers: {
+                headers:{
 
                     Authorization:
                     `Bearer ${token}`
@@ -74,6 +83,13 @@ async function loadInternships() {
 
 
 
+        console.log(
+            "My Internships:",
+            data
+        );
+
+
+
         const container =
         document.getElementById(
             "internshipContainer"
@@ -81,15 +97,13 @@ async function loadInternships() {
 
 
 
-        if (!container) return;
-
-
-
         container.innerHTML = "";
 
 
 
-        if (!response.ok) {
+
+
+        if(!response.ok){
 
 
             container.innerHTML =
@@ -97,15 +111,17 @@ async function loadInternships() {
 
             return;
 
+
         }
 
 
 
 
-        if (
+
+        if(
             !data.internships ||
             data.internships.length === 0
-        ) {
+        ){
 
 
             container.innerHTML =
@@ -119,12 +135,17 @@ async function loadInternships() {
 
 
 
-        data.internships.forEach((internship)=>{
+
+
+        data.internships.forEach(
+        internship => {
+
 
 
             const card =
-            document.createElement("div");
-
+            document.createElement(
+                "div"
+            );
 
 
             card.className =
@@ -135,60 +156,48 @@ async function loadInternships() {
             card.innerHTML = `
 
 
-                <h2>
-                    ${internship.title}
-                </h2>
+            <h2>
+            ${internship.title}
+            </h2>
 
 
-                <p>
-                <strong>Company:</strong>
-                ${internship.companyName || "Company"}
-                </p>
+            <p>
+            ${internship.description}
+            </p>
 
 
-                <p>
-                ${internship.description}
-                </p>
+            <p>
+            <strong>Location:</strong>
+            ${internship.location || "N/A"}
+            </p>
 
 
-                <p>
-                <strong>Location:</strong>
-                ${internship.location}
-                </p>
+            <p>
+            <strong>Duration:</strong>
+            ${internship.duration || "N/A"}
+            </p>
 
 
-                <p>
-                <strong>Duration:</strong>
-                ${internship.duration}
-                </p>
+            <p>
+            <strong>Mode:</strong>
+            ${internship.mode || "N/A"}
+            </p>
 
 
-                <p>
-                <strong>Mode:</strong>
-                ${internship.mode}
-                </p>
+            <button onclick="viewApplicants('${internship._id}')">
 
+            View Applicants
 
-                <p>
-                <strong>Stipend:</strong>
-                ${internship.stipend}
-                </p>
+            </button>
 
 
 
-                <button onclick="viewApplicants('${internship._id}')">
+            <button onclick="deleteInternship('${internship._id}')">
 
-                    View Applicants
+            Delete
 
-                </button>
+            </button>
 
-
-
-                <button onclick="deleteInternship('${internship._id}')">
-
-                    Delete
-
-                </button>
 
 
             `;
@@ -210,13 +219,13 @@ async function loadInternships() {
 
 
         console.error(
-            "Load Internship Error:",
+            "Internship Error:",
             error
         );
 
 
         alert(
-            "Unable to connect server"
+            "Unable to connect with server"
         );
 
 
@@ -225,6 +234,10 @@ async function loadInternships() {
 
 
 }
+
+
+
+
 
 
 
@@ -244,65 +257,293 @@ document.getElementById(
 if(internshipForm){
 
 
+
 internshipForm.addEventListener(
 "submit",
+
 async(e)=>{
 
 
-    e.preventDefault();
+e.preventDefault();
 
 
 
-    const internship = {
 
-
-        title:
-        document.getElementById("title").value,
+const internship = {
 
 
 
-        description:
-        document.getElementById("description").value,
+title:
+document.getElementById("title").value,
 
 
 
-        skills:
-        document.getElementById("skills")
-        .value
-        .split(","),
+description:
+document.getElementById("description").value,
 
 
 
-        location:
-        document.getElementById("location").value,
+skills:
+document
+.getElementById("skills")
+.value
+.split(","),
 
 
 
-        duration:
-        document.getElementById("duration").value,
+location:
+document.getElementById("location").value,
 
 
 
-        stipend:
-        document.getElementById("stipend").value,
+duration:
+document.getElementById("duration").value,
 
 
 
-        mode:
-        document.getElementById("mode").value,
+stipend:
+document.getElementById("stipend").value,
 
 
 
-        lastDate:
-        document.getElementById("lastDate").value
-
-
-    };
+mode:
+document.getElementById("mode").value,
 
 
 
-    try{
+lastDate:
+document.getElementById("lastDate").value
 
 
-        const response =
-       
+
+};
+
+
+
+
+
+try{
+
+
+const response =
+await fetch(
+
+`${API_URL}/internships`,
+
+{
+
+
+method:"POST",
+
+
+headers:{
+
+
+"Content-Type":
+"application/json",
+
+
+Authorization:
+`Bearer ${token}`
+
+
+},
+
+
+body:
+JSON.stringify(internship)
+
+
+}
+
+);
+
+
+
+
+
+const data =
+await response.json();
+
+
+
+console.log(
+"Post Internship:",
+data
+);
+
+
+
+
+alert(
+data.message ||
+"Internship created"
+);
+
+
+
+
+
+if(response.ok){
+
+
+internshipForm.reset();
+
+
+loadInternships();
+
+
+}
+
+
+
+}
+
+
+catch(error){
+
+
+console.error(
+error
+);
+
+
+alert(
+"Server Error"
+);
+
+
+}
+
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+
+// ==========================
+// Delete Internship
+// ==========================
+
+async function deleteInternship(id){
+
+
+
+if(
+!confirm(
+"Delete this internship?"
+)
+
+)
+return;
+
+
+
+
+
+try{
+
+
+
+const response =
+await fetch(
+
+`${API_URL}/internships/${id}`,
+
+{
+
+
+method:"DELETE",
+
+
+headers:{
+
+
+Authorization:
+`Bearer ${token}`
+
+
+}
+
+
+}
+
+);
+
+
+
+
+
+const data =
+await response.json();
+
+
+
+alert(
+data.message ||
+"Deleted"
+);
+
+
+
+if(response.ok){
+
+loadInternships();
+
+}
+
+
+
+}
+
+
+catch(error){
+
+
+console.error(error);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+// ==========================
+// View Applicants
+// ==========================
+
+
+function viewApplicants(id){
+
+
+window.location.href =
+`applicants.html?id=${id}`;
+
+
+}
+
+
+
+
+
+
+
+// Start
+
+loadInternships();
